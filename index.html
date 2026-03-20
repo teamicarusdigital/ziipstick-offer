@@ -1661,9 +1661,10 @@ function zsAddToCart(productIdx, btn) {
 function zsCartCheckout() {
   if (ZS_CART.length === 0) return;
   var items = ZS_CART.map(function(item){ return item.variantId + ':' + item.qty; }).join(',');
-  var url = 'https://ziipstick.com/cart/' + items + '?discount=GEEK20';
   var saved = getSavedParams();
-  if (saved) url += '&' + saved;
+  var hasUtmSource = saved && saved.indexOf('utm_source=') !== -1;
+  if (!hasUtmSource) saved = saved ? saved + '&utm_source=Icarus-FB' : 'utm_source=Icarus-FB';
+  var url = 'https://ziipstick.com/cart/' + items + '?' + saved;
   window.open(url, '_blank');
 }
 
