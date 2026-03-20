@@ -84,7 +84,7 @@
   background:#fff url('/images/hero-mobile.png') no-repeat bottom center;
   background-size:100% auto;
   padding:32px 16px 0;
-  min-height:740px;
+  min-height:calc(100vw * 1.883);
   display:flex;
   flex-direction:column;
 }
@@ -96,9 +96,9 @@
 .zs-hero__checks{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-bottom:24px;}
 .zs-hero__check{display:flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:#555e6d;}
 .zs-hero__check-icon{width:16px;height:16px;flex-shrink:0;color:#1b8a5a;}
-.zs-hero__cta{display:flex;align-items:center;justify-content:center;gap:8px;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:16px 24px;border-radius:8px;width:100%;margin-bottom:12px;}
+.zs-hero__cta{display:flex;align-items:center;justify-content:center;gap:8px;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:16px 24px;border-radius:8px;width:fit-content;margin-bottom:12px;}
 .zs-hero__cta:hover{background:#125c3c;}
-.zs-hero__trust-row{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:#8693a7;margin-bottom:0;}
+.zs-hero__trust-row{display:flex;align-items:center;justify-content:flex-start;gap:12px;font-family:'DM Sans',sans-serif;font-size:12px;color:#8693a7;margin-bottom:0;flex-wrap:wrap;}
 .zs-hero__trust-row span{display:flex;align-items:center;gap:4px;}
 .zs-hero__img-spacer{flex:1;}
 @media(min-width:768px){
@@ -116,8 +116,8 @@
   .zs-hero__body{font-size:16px;max-width:460px;margin-bottom:28px;}
   .zs-hero__checks{grid-template-columns:1fr 1fr;gap:10px 24px;margin-bottom:32px;}
   .zs-hero__check{font-size:14px;}
-  .zs-hero__cta{width:auto;justify-content:flex-start;font-size:16px;padding:18px 32px;}
-  .zs-hero__trust-row{justify-content:flex-start;gap:16px;margin-top:14px;}
+  .zs-hero__cta{font-size:16px;padding:18px 32px;}
+  .zs-hero__trust-row{gap:16px;margin-top:14px;}
   .zs-hero__img-spacer{display:none;}
 }
 
@@ -152,7 +152,7 @@
 .zs-product-card__badge--bestseller{background:#166e48;color:#fff;}
 .zs-product-card__badge--new{background:#21c45d;color:#fff;}
 .zs-product-card__badge--topfind{background:#f5a623;color:#fff;}
-.zs-product-card__badge--bestvalue{background:#f4c11a;color:#111;}
+.zs-product-card__badge--bestvalue{background:#f4c11a;color:#fff;}
 .zs-product-card__img{width:180px;height:180px;object-fit:contain;margin:0 auto 12px;}
 .zs-product-card__brand{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:#166e48;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
 .zs-product-card__name{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:#111111;margin-bottom:8px;}
@@ -384,6 +384,52 @@
 }
 
 /* ============================================================
+   VARIANT SELECTOR
+============================================================ */
+.zs-product-card__select{width:100%;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#111111;background:#f7f8fa;border:1.5px solid #e2e4e9;border-radius:8px;padding:9px 12px;margin-bottom:12px;cursor:pointer;appearance:auto;}
+.zs-product-card__select:focus{outline:none;border-color:#166e48;}
+
+/* ============================================================
+   SIDE CART
+============================================================ */
+.zs-cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+.zs-cart-overlay--open{opacity:1;pointer-events:all;}
+.zs-cart{position:fixed;top:0;right:0;bottom:0;width:100%;max-width:420px;background:#fff;z-index:301;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);box-shadow:-4px 0 24px rgba(0,0,0,0.12);}
+.zs-cart--open{transform:translateX(0);}
+.zs-cart__header{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 16px;border-bottom:1px solid #e2e4e9;}
+.zs-cart__title{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#111;}
+.zs-cart__count{font-family:'DM Sans',sans-serif;font-size:13px;color:#8693a7;}
+.zs-cart__close{width:32px;height:32px;border-radius:50%;background:#f0f2f5;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:#555e6d;line-height:1;}
+.zs-cart__body{flex:1;overflow-y:auto;padding:16px 20px;}
+.zs-cart__empty{text-align:center;padding:48px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:#8693a7;}
+.zs-cart__empty-icon{font-size:40px;margin-bottom:12px;}
+.zs-cart__items{display:flex;flex-direction:column;gap:16px;}
+.zs-cart-item{display:flex;gap:12px;align-items:flex-start;}
+.zs-cart-item__img{width:72px;height:72px;object-fit:contain;border:1px solid #e2e4e9;border-radius:8px;flex-shrink:0;}
+.zs-cart-item__info{flex:1;}
+.zs-cart-item__name{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;color:#111;margin-bottom:3px;line-height:1.3;}
+.zs-cart-item__variant{font-family:'DM Sans',sans-serif;font-size:12px;color:#8693a7;margin-bottom:8px;}
+.zs-cart-item__row{display:flex;align-items:center;justify-content:space-between;}
+.zs-cart-item__qty{display:flex;align-items:center;gap:0;border:1.5px solid #e2e4e9;border-radius:8px;overflow:hidden;}
+.zs-cart-item__qty-btn{width:30px;height:30px;background:#f7f8fa;border:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:#111;font-weight:700;}
+.zs-cart-item__qty-btn:hover{background:#e2e4e9;}
+.zs-cart-item__qty-num{width:32px;text-align:center;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#111;}
+.zs-cart-item__price{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:#166e48;}
+.zs-cart-item__remove{background:none;border:none;cursor:pointer;color:#8693a7;font-size:18px;padding:4px;line-height:1;}
+.zs-cart__footer{padding:16px 20px;border-top:1px solid #e2e4e9;}
+.zs-cart__subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.zs-cart__subtotal-label{font-family:'DM Sans',sans-serif;font-size:14px;color:#555e6d;}
+.zs-cart__subtotal-val{font-family:'DM Sans',sans-serif;font-size:18px;font-weight:700;color:#111;}
+.zs-cart__savings{font-family:'DM Sans',sans-serif;font-size:12px;color:#166e48;font-weight:600;text-align:right;margin-bottom:16px;}
+.zs-cart__checkout{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:16px;border-radius:8px;border:none;cursor:pointer;}
+.zs-cart__checkout:hover{background:#125c3c;}
+.zs-cart__continue{display:block;text-align:center;margin-top:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#8693a7;cursor:pointer;}
+/* Cart badge on header icon */
+.zs-cart-badge{position:absolute;top:-6px;right:-6px;background:#e53935;color:#fff;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+.zs-cart-badge--show{display:flex;}
+.zs-header__cart-wrap{position:relative;}
+
+/* ============================================================
    STICKY CTA (mobile only)
 ============================================================ */
 .zs-sticky{display:block;position:fixed;bottom:0;left:0;right:0;background:#166e48;padding:14px 16px;z-index:200;text-align:center;}
@@ -426,8 +472,9 @@
     <span class="zs-header__icon">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </span>
-    <span class="zs-header__icon">
+    <span class="zs-header__icon zs-header__cart-wrap" id="zs-cart-btn-mobile" style="cursor:pointer;" onclick="zsCartOpen()">
       <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="zs-cart-badge" id="zs-badge-mobile">0</span>
     </span>
   </div>
   <a href="https://ziipstick.com" class="zs-header__cta">CLAIM 20% OFF →</a>
@@ -505,147 +552,8 @@
     <button class="zs-products__tab">NEW ARRIVALS</button>
     <button class="zs-products__tab">UNDER $20</button>
   </div>
-  <div class="zs-products__grid">
-
-    <!-- Card 1 -->
-    <div class="zs-product-card">
-      <span class="zs-product-card__badge zs-product-card__badge--bestseller">⭐ Best Seller</span>
-      <img src="/images/product-pulse-vape.png" alt="Geek Bar Pulse Vape" class="zs-product-card__img" loading="lazy" />
-      <div class="zs-product-card__brand">Geek Bar</div>
-      <div class="zs-product-card__name">Pulse Vape</div>
-      <div class="zs-product-card__tags">
-        <span class="zs-product-card__tag">9K Puffs</span>
-        <span class="zs-product-card__tag">Rechargeable</span>
-        <span class="zs-product-card__tag">30+ Flavors</span>
-      </div>
-      <div class="zs-product-card__stars">
-        <span class="zs-product-card__stars-icons">★★★★★</span>
-        <span class="zs-product-card__stars-count">(1,842 reviews)</span>
-      </div>
-      <div class="zs-product-card__pricing">
-        <span class="zs-product-card__original">$25.99</span>
-        <span class="zs-product-card__sale">$21.60</span>
-        <span class="zs-product-card__save">Save 20%</span>
-      </div>
-      <a href="https://ziipstick.com" class="zs-product-card__btn">ADD TO CART – SAVE 20%</a>
-      <div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="zs-product-card">
-      <span class="zs-product-card__badge zs-product-card__badge--new">✦ New</span>
-      <img src="/images/product-pulse-x25k.png" alt="Geek Bar Pulse X 25K" class="zs-product-card__img" loading="lazy" />
-      <div class="zs-product-card__brand">Geek Bar</div>
-      <div class="zs-product-card__name">Pulse X 25K</div>
-      <div class="zs-product-card__tags">
-        <span class="zs-product-card__tag">25K Puffs</span>
-        <span class="zs-product-card__tag">Dual Mode</span>
-        <span class="zs-product-card__tag">Display Screen</span>
-      </div>
-      <div class="zs-product-card__stars">
-        <span class="zs-product-card__stars-icons">★★★★★</span>
-        <span class="zs-product-card__stars-count">(314 reviews)</span>
-      </div>
-      <div class="zs-product-card__pricing">
-        <span class="zs-product-card__original">$32.00</span>
-        <span class="zs-product-card__sale">$25.60</span>
-        <span class="zs-product-card__save">Save 20%</span>
-      </div>
-      <a href="https://ziipstick.com" class="zs-product-card__btn">ADD TO CART – SAVE 20%</a>
-      <div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="zs-product-card">
-      <span class="zs-product-card__badge zs-product-card__badge--topfind">🔥 Top Find</span>
-      <img src="/images/product-six-ice-control.png" alt="Kumi Six Ice Control" class="zs-product-card__img" loading="lazy" />
-      <div class="zs-product-card__brand">Kumi</div>
-      <div class="zs-product-card__name">Six Ice Control</div>
-      <div class="zs-product-card__tags">
-        <span class="zs-product-card__tag">Ice Tech</span>
-        <span class="zs-product-card__tag">30K Puffs</span>
-        <span class="zs-product-card__tag">Rechargeable</span>
-      </div>
-      <div class="zs-product-card__stars">
-        <span class="zs-product-card__stars-icons">★★★★★</span>
-        <span class="zs-product-card__stars-count">(503 reviews)</span>
-      </div>
-      <div class="zs-product-card__pricing">
-        <span class="zs-product-card__original">$32.00</span>
-        <span class="zs-product-card__sale">$25.60</span>
-        <span class="zs-product-card__save">Save 20%</span>
-      </div>
-      <a href="https://ziipstick.com" class="zs-product-card__btn">ADD TO CART – SAVE 20%</a>
-      <div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>
-    </div>
-
-    <!-- Card 4 -->
-    <div class="zs-product-card">
-      <span class="zs-product-card__badge zs-product-card__badge--bestvalue">💛 Best Value</span>
-      <img src="/images/product-myflavor-40k.png" alt="Adjust MyFlavor 40K" class="zs-product-card__img" loading="lazy" />
-      <div class="zs-product-card__brand">Adjust</div>
-      <div class="zs-product-card__name">MyFlavor 40K</div>
-      <div class="zs-product-card__tags">
-        <span class="zs-product-card__tag">40K Puffs</span>
-        <span class="zs-product-card__tag">Custom Flavor</span>
-      </div>
-      <div class="zs-product-card__stars">
-        <span class="zs-product-card__stars-icons">★★★★★</span>
-        <span class="zs-product-card__stars-count">(135 reviews)</span>
-      </div>
-      <div class="zs-product-card__pricing">
-        <span class="zs-product-card__original">$21.99</span>
-        <span class="zs-product-card__sale">$17.59</span>
-        <span class="zs-product-card__save">Save 20%</span>
-      </div>
-      <a href="https://ziipstick.com" class="zs-product-card__btn">ADD TO CART – SAVE 20%</a>
-      <div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>
-    </div>
-
-    <!-- Card 5 -->
-    <div class="zs-product-card">
-      <img src="/images/product-mysweet-40k.png" alt="Adjust MySweet 40K" class="zs-product-card__img" loading="lazy" />
-      <div class="zs-product-card__brand">Adjust</div>
-      <div class="zs-product-card__name">MySweet 40K</div>
-      <div class="zs-product-card__tags">
-        <span class="zs-product-card__tag">40K Puffs</span>
-        <span class="zs-product-card__tag">Sweet Profiles</span>
-      </div>
-      <div class="zs-product-card__stars">
-        <span class="zs-product-card__stars-icons">★★★★★</span>
-        <span class="zs-product-card__stars-count">(287 reviews)</span>
-      </div>
-      <div class="zs-product-card__pricing">
-        <span class="zs-product-card__original">$20.99</span>
-        <span class="zs-product-card__sale">$16.79</span>
-        <span class="zs-product-card__save">Save 20%</span>
-      </div>
-      <a href="https://ziipstick.com" class="zs-product-card__btn">ADD TO CART – SAVE 20%</a>
-      <div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>
-    </div>
-
-    <!-- Card 6 -->
-    <div class="zs-product-card">
-      <img src="/images/product-six-kurve.png" alt="Kumi Six Kurve" class="zs-product-card__img" loading="lazy" />
-      <div class="zs-product-card__brand">Kumi</div>
-      <div class="zs-product-card__name">Six Kurve</div>
-      <div class="zs-product-card__tags">
-        <span class="zs-product-card__tag">30K Puffs</span>
-        <span class="zs-product-card__tag">Ice Tech</span>
-      </div>
-      <div class="zs-product-card__stars">
-        <span class="zs-product-card__stars-icons">★★★★★</span>
-        <span class="zs-product-card__stars-count">(445 reviews)</span>
-      </div>
-      <div class="zs-product-card__pricing">
-        <span class="zs-product-card__original">$31.99</span>
-        <span class="zs-product-card__sale">$25.59</span>
-        <span class="zs-product-card__save">Save 20%</span>
-      </div>
-      <a href="https://ziipstick.com" class="zs-product-card__btn">ADD TO CART – SAVE 20%</a>
-      <div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>
-    </div>
-
+  <div class="zs-products__grid" id="zs-products-grid">
+    <!-- Rendered by JS -->
   </div>
   <div class="zs-products__see-all">
     <a href="https://ziipstick.com">SEE ALL 19 PRODUCTS ↓</a>
@@ -1125,6 +1033,36 @@
 </footer>
 
 <!-- =========================================================
+     SIDE CART
+========================================================== -->
+<div class="zs-cart-overlay" id="zs-cart-overlay" onclick="zsCartClose()"></div>
+<div class="zs-cart" id="zs-cart" role="dialog" aria-label="Shopping cart">
+  <div class="zs-cart__header">
+    <div>
+      <div class="zs-cart__title">Your Cart</div>
+      <div class="zs-cart__count" id="zs-cart-count-label">0 items</div>
+    </div>
+    <button class="zs-cart__close" onclick="zsCartClose()" aria-label="Close cart">×</button>
+  </div>
+  <div class="zs-cart__body" id="zs-cart-body">
+    <div class="zs-cart__empty" id="zs-cart-empty">
+      <div class="zs-cart__empty-icon">🛒</div>
+      Your cart is empty.<br>Add a product above to get started.
+    </div>
+    <div class="zs-cart__items" id="zs-cart-items" style="display:none;"></div>
+  </div>
+  <div class="zs-cart__footer" id="zs-cart-footer" style="display:none;">
+    <div class="zs-cart__subtotal">
+      <span class="zs-cart__subtotal-label">Subtotal (20% off applied)</span>
+      <span class="zs-cart__subtotal-val" id="zs-cart-subtotal">$0.00</span>
+    </div>
+    <div class="zs-cart__savings" id="zs-cart-savings"></div>
+    <button class="zs-cart__checkout" id="zs-cart-checkout-btn" onclick="zsCartCheckout()">CHECKOUT – SECURE ORDER →</button>
+    <span class="zs-cart__continue" onclick="zsCartClose()">← Continue Shopping</span>
+  </div>
+</div>
+
+<!-- =========================================================
      STICKY MOBILE CTA
 ========================================================== -->
 <div class="zs-sticky">
@@ -1135,7 +1073,9 @@
      JAVASCRIPT
 ========================================================== -->
 <script>
-// UTM Parameter Forwarding
+// ============================================================
+// UTM FORWARDING
+// ============================================================
 var PARAM_KEY = 'zs_incoming_params';
 var qs = window.location.search.replace(/^\?/, '');
 if (qs) { try { sessionStorage.setItem(PARAM_KEY, qs); } catch(e) {} }
@@ -1144,28 +1084,314 @@ function getSavedParams() {
   if (live) return live;
   try { return sessionStorage.getItem(PARAM_KEY) || ''; } catch(e) { return ''; }
 }
-document.addEventListener('DOMContentLoaded', function() {
-  var root = document.querySelector('.zs-root');
-  if (!root) return;
+
+// ============================================================
+// PRODUCT DATA (from Shopify)
+// ============================================================
+var ZS_PRODUCTS = [
+  {
+    handle: 'geek-bar-pulse-vape-copy',
+    title: 'Pulse Vape', brand: 'Geek Bar',
+    image: '/images/product-pulse-vape.png',
+    price: 26.99, reviews: 1842,
+    badge: 'bestseller', badgeText: '⭐ Best Seller',
+    tags: ['9K Puffs','Rechargeable','30+ Flavors'],
+    variants: [
+      {id:46830232993941,title:'Bluerazz Ice'},
+      {id:46830233550997,title:'Juicy Peach Ice'},
+      {id:46830233649301,title:'Miami Mint'},
+      {id:46830234075285,title:'Strawberry Banana'},
+      {id:46830234173589,title:'Watermelon Ice'},
+      {id:46830234206357,title:'White Gummy'}
+    ]
+  },
+  {
+    handle: 'geek-bar-pulse-x-vape-25k-copy',
+    title: 'Pulse X 25K', brand: 'Geek Bar',
+    image: '/images/product-pulse-x25k.png',
+    price: 31.99, reviews: 314,
+    badge: 'new', badgeText: '✦ New',
+    tags: ['25K Puffs','Dual Mode','Display Screen'],
+    variants: [
+      {id:46830366064789,title:'Blue Razz Ice'},
+      {id:46830366097557,title:'Cool Mint'},
+      {id:46830366130325,title:'Orange Fcuking Fab'},
+      {id:46830366163093,title:'Perfect Peach Slush'},
+      {id:46830366261397,title:'Watermelon Ice'},
+      {id:46830366294165,title:'White Peach Raspberry'},
+      {id:46830386053269,title:'Orange Slush'}
+    ]
+  },
+  {
+    handle: 'kumi-six-ice-control-vape',
+    title: 'Six Ice Control', brand: 'Kumi',
+    image: '/images/product-six-ice-control.png',
+    price: 31.99, reviews: 503,
+    badge: 'topfind', badgeText: '🔥 Top Find',
+    tags: ['Ice Tech','30K Puffs','Rechargeable'],
+    variants: [
+      {id:45888933331093,title:'Strawberry Watermelon'},
+      {id:45888933363861,title:'Strawberry Colada'},
+      {id:45888933396629,title:'Strawberry Fanta'},
+      {id:45888933429397,title:'Sour Blue Gummy'},
+      {id:45888933462165,title:'Blue Razz'},
+      {id:45888933494933,title:'Miami Ice'},
+      {id:45888933527701,title:'Frosted Lemonade'},
+      {id:45888933560469,title:'Berry Blast'}
+    ]
+  },
+  {
+    handle: 'adjust-myflavor-vape-40k',
+    title: 'MyFlavor 40K', brand: 'Adjust',
+    image: '/images/product-myflavor-40k.png',
+    price: 21.99, reviews: 135,
+    badge: 'bestvalue', badgeText: '💛 Best Value',
+    tags: ['40K Puffs','Custom Flavor'],
+    variants: [
+      {id:46060340576405,title:'Black Razz Baja Splash'},
+      {id:46060340609173,title:'Blue Razz Ice'},
+      {id:46060340641941,title:'Midnight Ice Chill'},
+      {id:46060340674709,title:'Mixed Mint'},
+      {id:46060340707477,title:'Orange Strawberry'},
+      {id:46060340740245,title:'Pineapple Ice Peach'},
+      {id:46060340773013,title:'Raspberry Watermelon'},
+      {id:46060340805781,title:'Strawberry Banana'},
+      {id:46060340838549,title:'Strawberry Mint Candy'},
+      {id:46060340871317,title:'Tangerine White Gummy'},
+      {id:46060340904085,title:'Triple Berry Grape'},
+      {id:46060340936853,title:'Watermelon B-Pop'},
+      {id:46060340969621,title:'Watermelon Mango Peach'}
+    ]
+  },
+  {
+    handle: 'adjust-mysweet-vape-40k',
+    title: 'MySweet 40K', brand: 'Adjust',
+    image: '/images/product-mysweet-40k.png',
+    price: 20.99, reviews: 287,
+    badge: '', badgeText: '',
+    tags: ['40K Puffs','Sweet Profiles'],
+    variants: [
+      {id:46060325634197,title:'Blue Razz B-Pop'},
+      {id:46060325666965,title:'Lemon Heads'},
+      {id:46060325699733,title:'Raspberry Orange'},
+      {id:46060325732501,title:'Triple Berry'},
+      {id:46060325765269,title:'Watermelon Roll Ups'},
+      {id:46060325798037,title:'Wintergreen Savers'}
+    ]
+  },
+  {
+    handle: 'kumi-six-ice-control-vape-1',
+    title: 'Six Kurve', brand: 'Kumi',
+    image: '/images/product-six-kurve.png',
+    price: 31.99, reviews: 445,
+    badge: '', badgeText: '',
+    tags: ['30K Puffs','Ice Tech'],
+    variants: [
+      {id:45888940114069,title:'Strawberry Watermelon'},
+      {id:45888942342293,title:'Blue Kiwi Ice'},
+      {id:45888942375061,title:'Cool Mint'},
+      {id:45888942407829,title:'Baja Blue'},
+      {id:45888942440597,title:'Strawberry Cake'},
+      {id:45888942473365,title:'Sour Watermelon Gummy'},
+      {id:45888942538901,title:'Pineapple Peach'},
+      {id:45888942571669,title:'Sour Gush'},
+      {id:45888942604437,title:'Grape Rancher'}
+    ]
+  }
+];
+
+function zsSalePrice(p){ return (p * 0.80).toFixed(2); }
+function zsOriginalPrice(p){ return p.toFixed(2); }
+
+function zsRenderProducts() {
+  var grid = document.getElementById('zs-products-grid');
+  if (!grid) return;
+  var html = '';
+  ZS_PRODUCTS.forEach(function(p, idx) {
+    var sale = zsSalePrice(p.price);
+    var orig = zsOriginalPrice(p.price);
+    var badgeHtml = p.badge ? '<span class="zs-product-card__badge zs-product-card__badge--'+p.badge+'">'+p.badgeText+'</span>' : '<span style="display:block;height:26px;margin-bottom:12px;"></span>';
+    var tagsHtml = p.tags.map(function(t){ return '<span class="zs-product-card__tag">'+t+'</span>'; }).join('');
+    var variantsHtml = p.variants.map(function(v){ return '<option value="'+v.id+'" data-title="'+v.title+'">'+v.title+'</option>'; }).join('');
+    var reviewsFmt = p.reviews.toLocaleString();
+    html += '<div class="zs-product-card" data-product-idx="'+idx+'">'
+      + badgeHtml
+      + '<img src="'+p.image+'" alt="'+p.brand+' '+p.title+'" class="zs-product-card__img" loading="lazy" />'
+      + '<div class="zs-product-card__brand">'+p.brand+'</div>'
+      + '<div class="zs-product-card__name">'+p.title+'</div>'
+      + '<div class="zs-product-card__tags">'+tagsHtml+'</div>'
+      + '<div class="zs-product-card__stars"><span class="zs-product-card__stars-icons">★★★★★</span><span class="zs-product-card__stars-count">('+reviewsFmt+' reviews)</span></div>'
+      + '<div class="zs-product-card__pricing"><span class="zs-product-card__original">$'+orig+'</span><span class="zs-product-card__sale">$'+sale+'</span><span class="zs-product-card__save">Save 20%</span></div>'
+      + '<select class="zs-product-card__select" data-product-idx="'+idx+'"><option value="" disabled selected>Select Flavor</option>'+variantsHtml+'</select>'
+      + '<button class="zs-product-card__btn" data-product-idx="'+idx+'" onclick="zsAddToCart('+idx+', this)">ADD TO CART – SAVE 20%</button>'
+      + '<div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>'
+      + '</div>';
+  });
+  grid.innerHTML = html;
+}
+
+// ============================================================
+// CART STATE
+// ============================================================
+var ZS_CART = [];
+try { ZS_CART = JSON.parse(localStorage.getItem('zs_cart') || '[]'); } catch(e) { ZS_CART = []; }
+
+function zsSaveCart() {
+  try { localStorage.setItem('zs_cart', JSON.stringify(ZS_CART)); } catch(e) {}
+}
+
+function zsCartCount() {
+  return ZS_CART.reduce(function(sum, item){ return sum + item.qty; }, 0);
+}
+
+function zsCartSubtotal() {
+  return ZS_CART.reduce(function(sum, item){ return sum + (item.salePrice * item.qty); }, 0);
+}
+
+function zsCartOriginalTotal() {
+  return ZS_CART.reduce(function(sum, item){ return sum + (item.price * item.qty); }, 0);
+}
+
+function zsUpdateBadges() {
+  var count = zsCartCount();
+  var badges = document.querySelectorAll('.zs-cart-badge');
+  badges.forEach(function(b) {
+    b.textContent = count;
+    if (count > 0) b.classList.add('zs-cart-badge--show');
+    else b.classList.remove('zs-cart-badge--show');
+  });
+}
+
+function zsCartOpen() {
+  zsRenderCart();
+  document.getElementById('zs-cart').classList.add('zs-cart--open');
+  document.getElementById('zs-cart-overlay').classList.add('zs-cart-overlay--open');
+  document.body.style.overflow = 'hidden';
+}
+
+function zsCartClose() {
+  document.getElementById('zs-cart').classList.remove('zs-cart--open');
+  document.getElementById('zs-cart-overlay').classList.remove('zs-cart-overlay--open');
+  document.body.style.overflow = '';
+}
+
+function zsRenderCart() {
+  var count = zsCartCount();
+  var countLabel = document.getElementById('zs-cart-count-label');
+  var empty = document.getElementById('zs-cart-empty');
+  var itemsEl = document.getElementById('zs-cart-items');
+  var footer = document.getElementById('zs-cart-footer');
+  if (countLabel) countLabel.textContent = count + (count === 1 ? ' item' : ' items');
+  if (count === 0) {
+    if (empty) empty.style.display = 'block';
+    if (itemsEl) itemsEl.style.display = 'none';
+    if (footer) footer.style.display = 'none';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (itemsEl) itemsEl.style.display = 'flex';
+  if (footer) footer.style.display = 'block';
+  var html = '';
+  ZS_CART.forEach(function(item, i) {
+    html += '<div class="zs-cart-item">'
+      + '<img src="'+item.image+'" alt="'+item.name+'" class="zs-cart-item__img" />'
+      + '<div class="zs-cart-item__info">'
+      + '<div class="zs-cart-item__name">'+item.name+'</div>'
+      + '<div class="zs-cart-item__variant">'+item.variantTitle+'</div>'
+      + '<div class="zs-cart-item__row">'
+      + '<div class="zs-cart-item__qty">'
+      + '<button class="zs-cart-item__qty-btn" onclick="zsQtyChange('+i+',-1)">−</button>'
+      + '<span class="zs-cart-item__qty-num">'+item.qty+'</span>'
+      + '<button class="zs-cart-item__qty-btn" onclick="zsQtyChange('+i+',1)">+</button>'
+      + '</div>'
+      + '<span class="zs-cart-item__price">$'+(item.salePrice * item.qty).toFixed(2)+'</span>'
+      + '</div>'
+      + '</div>'
+      + '<button class="zs-cart-item__remove" onclick="zsRemoveItem('+i+')" title="Remove">×</button>'
+      + '</div>';
+  });
+  if (itemsEl) itemsEl.innerHTML = html;
+  var subtotal = zsCartSubtotal();
+  var original = zsCartOriginalTotal();
+  var savings = original - subtotal;
+  var subtotalEl = document.getElementById('zs-cart-subtotal');
+  var savingsEl = document.getElementById('zs-cart-savings');
+  if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
+  if (savingsEl) savingsEl.textContent = 'You\'re saving $' + savings.toFixed(2) + ' today!';
+}
+
+function zsQtyChange(idx, delta) {
+  ZS_CART[idx].qty += delta;
+  if (ZS_CART[idx].qty <= 0) ZS_CART.splice(idx, 1);
+  zsSaveCart();
+  zsUpdateBadges();
+  zsRenderCart();
+}
+
+function zsRemoveItem(idx) {
+  ZS_CART.splice(idx, 1);
+  zsSaveCart();
+  zsUpdateBadges();
+  zsRenderCart();
+}
+
+function zsAddToCart(productIdx, btn) {
+  var p = ZS_PRODUCTS[productIdx];
+  var card = btn.closest('.zs-product-card');
+  var select = card.querySelector('.zs-product-card__select');
+  if (!select || !select.value) {
+    select.style.borderColor = '#e53935';
+    select.focus();
+    setTimeout(function(){ select.style.borderColor = '#e2e4e9'; }, 2000);
+    return;
+  }
+  var variantId = parseInt(select.value);
+  var variantTitle = select.options[select.selectedIndex].getAttribute('data-title');
+  var sale = parseFloat(zsSalePrice(p.price));
+  // Check if already in cart
+  var existing = ZS_CART.find(function(item){ return item.variantId === variantId; });
+  if (existing) {
+    existing.qty++;
+  } else {
+    ZS_CART.push({
+      variantId: variantId,
+      name: p.brand + ' ' + p.title,
+      variantTitle: variantTitle,
+      image: p.image,
+      price: p.price,
+      salePrice: sale,
+      handle: p.handle,
+      qty: 1
+    });
+  }
+  zsSaveCart();
+  zsUpdateBadges();
+  // Tracklution
+  if (typeof tlq === 'function') {
+    tlq('track', 'AddToCart', { content_name: p.brand+' '+p.title+' ('+variantTitle+')', content_ids: [variantId], value: sale, currency: 'USD' });
+  }
+  // Button feedback
+  btn.textContent = '✓ ADDED TO CART';
+  btn.style.background = '#1b8a5a';
+  setTimeout(function(){
+    btn.textContent = 'ADD TO CART – SAVE 20%';
+    btn.style.background = '';
+    zsCartOpen();
+  }, 600);
+}
+
+function zsCartCheckout() {
+  if (ZS_CART.length === 0) return;
+  var items = ZS_CART.map(function(item){ return item.variantId + ':' + item.qty; }).join(',');
+  var url = 'https://ziipstick.com/cart/' + items;
   var saved = getSavedParams();
-  if (saved) {
-    var links = root.querySelectorAll('a[href^="http"]');
-    for (var i = 0; i < links.length; i++) {
-      var href = links[i].getAttribute('href');
-      links[i].setAttribute('href', href + (href.indexOf('?') === -1 ? '?' : '&') + saved);
-    }
-  }
+  if (saved) url += '?' + saved;
+  window.open(url, '_blank');
+}
 
-  // Desktop video cards show all 5
-  if (window.innerWidth >= 768) {
-    var v4 = document.getElementById('zs-vid-4');
-    var v5 = document.getElementById('zs-vid-5');
-    if (v4) v4.style.display = 'block';
-    if (v5) v5.style.display = 'block';
-  }
-});
-
-// Countdown Timer — resets every 24h from midnight
+// ============================================================
+// COUNTDOWN TIMER
+// ============================================================
 function zsCountdown() {
   var now = new Date();
   var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
@@ -1188,49 +1414,50 @@ function zsCountdown() {
 zsCountdown();
 setInterval(zsCountdown, 1000);
 
-// FAQ accordion
+// ============================================================
+// FAQ ACCORDION
+// ============================================================
 function zsFaqToggle(questionEl) {
   var item = questionEl.parentElement;
   var icon = questionEl.querySelector('.zs-faq__icon');
   var isOpen = item.classList.contains('zs-faq__item--open');
-  // Close all
-  var allItems = document.querySelectorAll('.zs-faq__item');
-  allItems.forEach(function(el) {
+  document.querySelectorAll('.zs-faq__item').forEach(function(el) {
     el.classList.remove('zs-faq__item--open');
     var ic = el.querySelector('.zs-faq__icon');
     if (ic) ic.textContent = '+';
   });
-  // Open clicked (if it was closed)
   if (!isOpen) {
     item.classList.add('zs-faq__item--open');
     if (icon) icon.textContent = '✕';
   }
 }
 
-// AddToCart Tracklution events
+// ============================================================
+// DOM READY
+// ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-  var btns = document.querySelectorAll('.zs-product-card__btn');
-  var productData = [
-    { name: 'Geek Bar Pulse Vape', id: 'pulse-vape', price: 21.60 },
-    { name: 'Geek Bar Pulse X 25K', id: 'pulse-x25k', price: 25.60 },
-    { name: 'Kumi Six Ice Control', id: 'six-ice-control', price: 25.60 },
-    { name: 'Adjust MyFlavor 40K', id: 'myflavor-40k', price: 17.59 },
-    { name: 'Adjust MySweet 40K', id: 'mysweet-40k', price: 16.79 },
-    { name: 'Kumi Six Kurve', id: 'six-kurve', price: 25.59 }
-  ];
-  btns.forEach(function(btn, i) {
-    btn.addEventListener('click', function() {
-      var p = productData[i] || {};
-      if (typeof tlq === 'function') {
-        tlq('track', 'AddToCart', {
-          content_name: p.name,
-          content_ids: [p.id],
-          value: p.price,
-          currency: 'USD'
-        });
-      }
-    });
-  });
+  // Render products
+  zsRenderProducts();
+  // Update cart badges
+  zsUpdateBadges();
+  // Desktop video extras
+  if (window.innerWidth >= 768) {
+    var v4 = document.getElementById('zs-vid-4');
+    var v5 = document.getElementById('zs-vid-5');
+    if (v4) v4.style.display = 'block';
+    if (v5) v5.style.display = 'block';
+  }
+  // UTM forwarding on all outbound links
+  var root = document.querySelector('.zs-root');
+  if (root) {
+    var saved = getSavedParams();
+    if (saved) {
+      root.querySelectorAll('a[href^="http"]').forEach(function(link) {
+        var href = link.getAttribute('href');
+        link.setAttribute('href', href + (href.indexOf('?') === -1 ? '?' : '&') + saved);
+      });
+    }
+  }
 });
 </script>
 
