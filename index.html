@@ -174,8 +174,10 @@ html{scroll-behavior:smooth;}
 .zs-product-card__btn{display:flex;align-items:center;justify-content:center;width:100%;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:13px 16px;border-radius:8px;margin-bottom:8px;}
 .zs-product-card__btn:hover{background:#125c3c;}
 .zs-product-card__guarantee{text-align:center;font-family:'DM Sans',sans-serif;font-size:11px;color:#8693a7;display:flex;align-items:center;justify-content:center;gap:4px;}
-.zs-products__see-all{text-align:center;margin-top:28px;}
-.zs-products__see-all a{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#166e48;border:1.5px solid #e2e4e9;padding:10px 28px;border-radius:8px;display:inline-block;}
+.zs-products__more{text-align:center;margin-top:28px;}
+.zs-products__more-btn{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;color:#fff;background:#166e48;border:none;padding:13px 36px;border-radius:8px;cursor:pointer;letter-spacing:0.04em;text-transform:uppercase;}
+.zs-products__more-btn:hover{background:#125c3c;}
+.zs-products__more-btn:disabled{display:none;}
 @media(min-width:768px){
   .zs-products{padding:80px 160px;}
   .zs-products__h2{font-size:64px;}
@@ -615,8 +617,8 @@ html{scroll-behavior:smooth;}
   <div class="zs-products__grid" id="zs-products-grid">
     <!-- Rendered by JS -->
   </div>
-  <div class="zs-products__see-all">
-    <a href="https://ziipstick.com">SEE ALL 19 PRODUCTS ↓</a>
+  <div class="zs-products__more">
+    <button class="zs-products__more-btn" id="zs-show-more-btn" onclick="zsShowMore()">SHOW MORE PRODUCTS ↓</button>
   </div>
 </section>
 
@@ -1169,16 +1171,16 @@ function getSavedParams() {
 }
 
 // ============================================================
-// PRODUCT DATA (from Shopify)
+// PRODUCT DATA (from Shopify — worldwide-favorites collection)
 // ============================================================
 var ZS_PRODUCTS = [
   {
     handle: 'geek-bar-pulse-vape-copy',
-    title: 'Pulse Vape', brand: 'Geek Bar',
-    image: '/images/product-pulse-vape.png',
+    title: 'Geek Bar Pulse', brand: 'Ziip Stick',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Screenshot2025-04-01at1.17.13PM.png?v=1743538637',
     price: 26.99, reviews: 1842,
     badge: 'bestseller', badgeText: '⭐ Best Seller',
-    tags: ['9K Puffs','Rechargeable','30+ Flavors'],
+    tags: ['9K Puffs','Rechargeable','6 Flavors'],
     variants: [
       {id:46830232993941,title:'Bluerazz Ice'},
       {id:46830233550997,title:'Juicy Peach Ice'},
@@ -1190,8 +1192,8 @@ var ZS_PRODUCTS = [
   },
   {
     handle: 'geek-bar-pulse-x-vape-25k-copy',
-    title: 'Pulse X 25K', brand: 'Geek Bar',
-    image: '/images/product-pulse-x25k.png',
+    title: 'Geek Bar Pulse X 25K', brand: 'Ziip Stick',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Screenshot2025-04-01at1.10.01PM.png?v=1743538208',
     price: 31.99, reviews: 314,
     badge: 'new', badgeText: '✦ New',
     tags: ['25K Puffs','Dual Mode','Display Screen'],
@@ -1207,11 +1209,11 @@ var ZS_PRODUCTS = [
   },
   {
     handle: 'kumi-six-ice-control-vape',
-    title: 'Six Ice Control', brand: 'Kumi',
-    image: '/images/product-six-ice-control.png',
+    title: 'KUMI Six Ice Control', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Kumi6.jpg?v=1742850323',
     price: 31.99, reviews: 503,
     badge: 'topfind', badgeText: '🔥 Top Find',
-    tags: ['Ice Tech','30K Puffs','Rechargeable'],
+    tags: ['Ice Control','30K Puffs','8 Flavors'],
     variants: [
       {id:45888933331093,title:'Strawberry Watermelon'},
       {id:45888933363861,title:'Strawberry Colada'},
@@ -1225,11 +1227,11 @@ var ZS_PRODUCTS = [
   },
   {
     handle: 'adjust-myflavor-vape-40k',
-    title: 'MyFlavor 40K', brand: 'Adjust',
-    image: '/images/product-myflavor-40k.png',
+    title: 'Adjust MyFlavor 40K', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Adjust-MyFlavor-40K.webp?v=1748550228',
     price: 21.99, reviews: 135,
     badge: 'bestvalue', badgeText: '💛 Best Value',
-    tags: ['40K Puffs','Custom Flavor'],
+    tags: ['40K Puffs','Custom Flavor','13 Flavors'],
     variants: [
       {id:46060340576405,title:'Black Razz Baja Splash'},
       {id:46060340609173,title:'Blue Razz Ice'},
@@ -1247,12 +1249,37 @@ var ZS_PRODUCTS = [
     ]
   },
   {
+    handle: 'adjust-mycool-40k-vape',
+    title: 'Adjust MyCool 40K', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Adjust-MyCool-40K-Smart-Vape.webp?v=1748549189',
+    price: 20.99, reviews: 198,
+    badge: '', badgeText: '',
+    tags: ['40K Puffs','Smart Vape','15 Flavors'],
+    variants: [
+      {id:46060312428693,title:'Baja Splash'},
+      {id:46060312461461,title:'Blue Razz Ice'},
+      {id:46060312494229,title:'Cherry Fuse'},
+      {id:46060312526997,title:'Cherry Strazz'},
+      {id:46060312559765,title:'Dragon Strawnana'},
+      {id:46060312592533,title:'Mango Magic'},
+      {id:46060312625301,title:'Miami Mint'},
+      {id:46060312658069,title:'Peach+'},
+      {id:46060312690837,title:'Scary Berry'},
+      {id:46060312723605,title:'Sour Apple Ice'},
+      {id:46060312756373,title:'Sour Lush Gummy'},
+      {id:46060312789141,title:'Sour Strawberry Dragonfruit'},
+      {id:46060312821909,title:'Summer Splash'},
+      {id:46060312854677,title:'Tigers Blood'},
+      {id:46060312887445,title:'Watermelon Ice'}
+    ]
+  },
+  {
     handle: 'adjust-mysweet-vape-40k',
-    title: 'MySweet 40K', brand: 'Adjust',
-    image: '/images/product-mysweet-40k.png',
+    title: 'Adjust MySweet 40K', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Adjust_MySweet_40K_Vape__71682.jpg?v=1748549806',
     price: 20.99, reviews: 287,
     badge: '', badgeText: '',
-    tags: ['40K Puffs','Sweet Profiles'],
+    tags: ['40K Puffs','Sweet Profiles','6 Flavors'],
     variants: [
       {id:46060325634197,title:'Blue Razz B-Pop'},
       {id:46060325666965,title:'Lemon Heads'},
@@ -1264,11 +1291,11 @@ var ZS_PRODUCTS = [
   },
   {
     handle: 'kumi-six-ice-control-vape-1',
-    title: 'Six Kurve', brand: 'Kumi',
-    image: '/images/product-six-kurve.png',
+    title: 'KUMI Six Kurve', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/1__01421.jpg?v=1742850612',
     price: 31.99, reviews: 445,
     badge: '', badgeText: '',
-    tags: ['30K Puffs','Ice Tech'],
+    tags: ['30K Puffs','Kurve Design','9 Flavors'],
     variants: [
       {id:45888940114069,title:'Strawberry Watermelon'},
       {id:45888942342293,title:'Blue Kiwi Ice'},
@@ -1280,37 +1307,175 @@ var ZS_PRODUCTS = [
       {id:45888942571669,title:'Sour Gush'},
       {id:45888942604437,title:'Grape Rancher'}
     ]
+  },
+  {
+    handle: 'kumi-six-vape-by-well-versed',
+    title: 'KUMI Six', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Tenflavorscollection.jpg?v=1743534013',
+    price: 24.99, reviews: 362,
+    badge: '', badgeText: '',
+    tags: ['30K Puffs','12 Flavors','Rechargeable'],
+    variants: [
+      {id:45911758602389,title:'Banana Ice'},
+      {id:45911758635157,title:'Blue Razz'},
+      {id:45911758667925,title:'Blue Razz Ice'},
+      {id:45911758700693,title:'Cool Mint'},
+      {id:45911758733461,title:'Menthol'},
+      {id:45911758766229,title:'Peach Ice'},
+      {id:45911758798997,title:'Sour Blue Gummy'},
+      {id:45911758831765,title:'Strawberry Fanta'},
+      {id:45911758864533,title:'Strawberry Watermelon'},
+      {id:45911758897301,title:'Tobacco'},
+      {id:45911758930069,title:'Triple Berry Ice'},
+      {id:45911758962837,title:'Watermelon Ice'}
+    ]
+  },
+  {
+    handle: 'vim-xr20000-vape-by-well-versed',
+    title: 'VIM XR20000', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Bait_Switch.jpg?v=1743533604',
+    price: 20.99, reviews: 211,
+    badge: '', badgeText: '',
+    tags: ['20K Puffs','20 Flavors','Rechargeable'],
+    variants: [
+      {id:45911750017173,title:'Bait & Switch'},
+      {id:45911750049941,title:'Blue Razz Ice'},
+      {id:45911750082709,title:'Blue Snow Cone'},
+      {id:45911750115477,title:'Cali Cherry'},
+      {id:45911750148245,title:'Cherry Lemon'},
+      {id:45911750181013,title:'Grape Ice'},
+      {id:45911750213781,title:'Macho Mint'},
+      {id:45911750246549,title:'Nana Bread'},
+      {id:45911750279317,title:'Peach Berry'},
+      {id:45911750312085,title:'Pink Lemonade'},
+      {id:45911750344853,title:'Red Candy'},
+      {id:45911750377621,title:'Sour Azul'},
+      {id:45911750410389,title:'Strawberry Banana'},
+      {id:45911750443157,title:'Strawberry Fanta'},
+      {id:45911750475925,title:'Strawberry Watermelon'},
+      {id:45911750508693,title:'Triple Apple'},
+      {id:45911750541461,title:'Tropical Soda'},
+      {id:45911750574229,title:'Watermelon Ice'},
+      {id:45911750606997,title:'White Gummy'},
+      {id:45911750639765,title:'Wubblelicious'}
+    ]
+  },
+  {
+    handle: 'adjust-mysour-40k-vape',
+    title: 'Adjust MySour 40K', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/1__93416.jpg?v=1748549572',
+    price: 20.99, reviews: 94,
+    badge: '', badgeText: '',
+    tags: ['40K Puffs','Sour Profiles','5 Flavors'],
+    variants: [
+      {id:46060316459157,title:'Sour Blue Razz Ice'},
+      {id:46060316491925,title:'Sour Grapple'},
+      {id:46060316524693,title:'Sour Island'},
+      {id:46060316557461,title:'Sour Peach Raspberry'},
+      {id:46060316590229,title:'Sour Pinkberry'}
+    ]
+  },
+  {
+    handle: 'kumi-disposable-vape',
+    title: 'KUMI Disposable', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/Screenshot2025-04-17at12.07.48PM.png?v=1744916873',
+    price: 21.99, reviews: 178,
+    badge: '', badgeText: '',
+    tags: ['18K Puffs','10 Flavors','Rechargeable'],
+    variants: [
+      {id:45959435059349,title:'Apple Berry Acai'},
+      {id:45959435092117,title:'DragonFruit Lemonade'},
+      {id:45959435124885,title:'Fruit Punch'},
+      {id:45959435157653,title:'Mint Ice'},
+      {id:45959435190421,title:'Peach Ice'},
+      {id:45959435223189,title:'Pineapple Coconut Banana'},
+      {id:45959435255957,title:'Raspberry Watermelon'},
+      {id:45959435288725,title:'Strawberry Kiwi Pomegranate'},
+      {id:45959435321493,title:'Strawberry Watermelon'},
+      {id:45959435354261,title:'Watermelon Ice'}
+    ]
+  },
+  {
+    handle: 'kumi-black-vape',
+    title: 'KUMI Black', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/KUMI_Black_Disposable_Vape_-_10000_Puffs__71751.jpg?v=1742851749',
+    price: 21.99, reviews: 143,
+    badge: '', badgeText: '',
+    tags: ['10K Puffs','5 Flavors','Compact'],
+    variants: [
+      {id:45888967147669,title:'Baja Blue'},
+      {id:45888967180437,title:'Blue Razz Ice'},
+      {id:45888967213205,title:'Grape Ice'},
+      {id:45888967245973,title:'Strawberry Banana'},
+      {id:45888967278741,title:'Twizz'}
+    ]
+  },
+  {
+    handle: 'kicknic-vape-kit-by-well-versed',
+    title: 'KickNic Vape Kit', brand: 'VapeRanger',
+    image: 'https://cdn.shopify.com/s/files/1/0482/2407/5925/files/KickNicpackaging_1.jpg?v=1743534318',
+    price: 44.99, reviews: 89,
+    badge: '', badgeText: '',
+    tags: ['Refillable Kit','3 Flavors','Long Lasting'],
+    variants: [
+      {id:45911766827157,title:'Tobacco'},
+      {id:45911766859925,title:'Mixed Berry'},
+      {id:45911766892693,title:'Cool Mint'}
+    ]
   }
 ];
 
+var ZS_SHOWN = 4;
+
 function zsSalePrice(p){ return (p * 0.80).toFixed(2); }
 function zsOriginalPrice(p){ return p.toFixed(2); }
+
+function zsProductCardHTML(p, idx) {
+  var sale = zsSalePrice(p.price);
+  var orig = zsOriginalPrice(p.price);
+  var badgeHtml = p.badge ? '<span class="zs-product-card__badge zs-product-card__badge--'+p.badge+'">'+p.badgeText+'</span>' : '<span style="display:block;height:26px;margin-bottom:12px;"></span>';
+  var tagsHtml = p.tags.map(function(t){ return '<span class="zs-product-card__tag">'+t+'</span>'; }).join('');
+  var variantsHtml = p.variants.map(function(v){ return '<option value="'+v.id+'" data-title="'+v.title+'">'+v.title+'</option>'; }).join('');
+  var reviewsFmt = p.reviews.toLocaleString();
+  return '<div class="zs-product-card" data-product-idx="'+idx+'">'
+    + badgeHtml
+    + '<img src="'+p.image+'" alt="'+p.brand+' '+p.title+'" class="zs-product-card__img" loading="lazy" />'
+    + '<div class="zs-product-card__brand">'+p.brand+'</div>'
+    + '<div class="zs-product-card__name">'+p.title+'</div>'
+    + '<div class="zs-product-card__tags">'+tagsHtml+'</div>'
+    + '<div class="zs-product-card__stars"><span class="zs-product-card__stars-icons">★★★★★</span><span class="zs-product-card__stars-count">('+reviewsFmt+' reviews)</span></div>'
+    + '<div class="zs-product-card__pricing"><span class="zs-product-card__original">$'+orig+'</span><span class="zs-product-card__sale">$'+sale+'</span><span class="zs-product-card__save">Save 20%</span></div>'
+    + '<select class="zs-product-card__select" data-product-idx="'+idx+'"><option value="" disabled selected>Select Flavor</option>'+variantsHtml+'</select>'
+    + '<button class="zs-product-card__btn" data-product-idx="'+idx+'" onclick="zsAddToCart('+idx+', this)">ADD TO CART – SAVE 20%</button>'
+    + '<div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>'
+    + '</div>';
+}
 
 function zsRenderProducts() {
   var grid = document.getElementById('zs-products-grid');
   if (!grid) return;
   var html = '';
-  ZS_PRODUCTS.forEach(function(p, idx) {
-    var sale = zsSalePrice(p.price);
-    var orig = zsOriginalPrice(p.price);
-    var badgeHtml = p.badge ? '<span class="zs-product-card__badge zs-product-card__badge--'+p.badge+'">'+p.badgeText+'</span>' : '<span style="display:block;height:26px;margin-bottom:12px;"></span>';
-    var tagsHtml = p.tags.map(function(t){ return '<span class="zs-product-card__tag">'+t+'</span>'; }).join('');
-    var variantsHtml = p.variants.map(function(v){ return '<option value="'+v.id+'" data-title="'+v.title+'">'+v.title+'</option>'; }).join('');
-    var reviewsFmt = p.reviews.toLocaleString();
-    html += '<div class="zs-product-card" data-product-idx="'+idx+'">'
-      + badgeHtml
-      + '<img src="'+p.image+'" alt="'+p.brand+' '+p.title+'" class="zs-product-card__img" loading="lazy" />'
-      + '<div class="zs-product-card__brand">'+p.brand+'</div>'
-      + '<div class="zs-product-card__name">'+p.title+'</div>'
-      + '<div class="zs-product-card__tags">'+tagsHtml+'</div>'
-      + '<div class="zs-product-card__stars"><span class="zs-product-card__stars-icons">★★★★★</span><span class="zs-product-card__stars-count">('+reviewsFmt+' reviews)</span></div>'
-      + '<div class="zs-product-card__pricing"><span class="zs-product-card__original">$'+orig+'</span><span class="zs-product-card__sale">$'+sale+'</span><span class="zs-product-card__save">Save 20%</span></div>'
-      + '<select class="zs-product-card__select" data-product-idx="'+idx+'"><option value="" disabled selected>Select Flavor</option>'+variantsHtml+'</select>'
-      + '<button class="zs-product-card__btn" data-product-idx="'+idx+'" onclick="zsAddToCart('+idx+', this)">ADD TO CART – SAVE 20%</button>'
-      + '<div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>'
-      + '</div>';
-  });
+  var limit = Math.min(ZS_SHOWN, ZS_PRODUCTS.length);
+  for (var i = 0; i < limit; i++) {
+    html += zsProductCardHTML(ZS_PRODUCTS[i], i);
+  }
   grid.innerHTML = html;
+  var btn = document.getElementById('zs-show-more-btn');
+  if (btn) btn.style.display = ZS_SHOWN >= ZS_PRODUCTS.length ? 'none' : 'inline-block';
+}
+
+function zsShowMore() {
+  var grid = document.getElementById('zs-products-grid');
+  if (!grid) return;
+  var prev = ZS_SHOWN;
+  ZS_SHOWN = Math.min(ZS_SHOWN + 4, ZS_PRODUCTS.length);
+  for (var i = prev; i < ZS_SHOWN; i++) {
+    var div = document.createElement('div');
+    div.innerHTML = zsProductCardHTML(ZS_PRODUCTS[i], i);
+    grid.appendChild(div.firstChild);
+  }
+  var btn = document.getElementById('zs-show-more-btn');
+  if (btn) btn.style.display = ZS_SHOWN >= ZS_PRODUCTS.length ? 'none' : 'inline-block';
 }
 
 // ============================================================
