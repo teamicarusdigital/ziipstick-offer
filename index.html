@@ -1436,9 +1436,9 @@ function zsProductCardHTML(p, idx) {
   var orig = zsOriginalPrice(p.price);
   var badgeHtml = p.badge ? '<span class="zs-product-card__badge zs-product-card__badge--'+p.badge+'">'+p.badgeText+'</span>' : '<span style="display:block;height:26px;margin-bottom:12px;"></span>';
   var tagsHtml = p.tags.map(function(t){ return '<span class="zs-product-card__tag">'+t+'</span>'; }).join('');
-  var variantsHtml = p.variants.map(function(v){
-    var oos = v.available === false;
-    return '<option value="'+v.id+'" data-title="'+v.title+'" data-available="'+(oos?'0':'1')+'"'+(oos?' disabled':'')+'>'+v.title+(oos?' – Out of Stock':'')+'</option>';
+  var availableVariants = p.variants.filter(function(v){ return v.available !== false; });
+  var variantsHtml = availableVariants.map(function(v){
+    return '<option value="'+v.id+'" data-title="'+v.title+'">'+v.title+'</option>';
   }).join('');
   var allOos = p.outOfStock;
   var reviewsFmt = p.reviews.toLocaleString();
@@ -1554,9 +1554,7 @@ function zsUpdateStockUI() {
         if (!opt.value) return;
         var v = p.variants.find(function(v) { return String(v.id) === opt.value; });
         if (v && v.available === false) {
-          opt.disabled = true;
-          opt.setAttribute('data-available', '0');
-          if (opt.text.indexOf('Out of Stock') === -1) opt.text = v.title + ' – Out of Stock';
+          opt.parentNode.removeChild(opt);
         }
       });
       if (p.outOfStock) sel.disabled = true;
@@ -1716,13 +1714,15 @@ function zsAddToCart(productIdx, btn) {
     setTimeout(function(){ select.style.borderColor = '#e2e4e9'; }, 2000);
     return;
   }
-  var selectedOption = select.options[select.selectedIndex];
-  if (selectedOption.getAttribute('data-available') === '0') {
+  var variantId = parseInt(select.value);
+  var variant = p.variants.find(function(v){ return v.id === variantId; });
+  if (!variant || variant.available === false) {
     select.style.borderColor = '#e53935';
+    select.value = '';
     setTimeout(function(){ select.style.borderColor = '#e2e4e9'; }, 2000);
     return;
   }
-  var variantId = parseInt(select.value);
+  var selectedOption = select.options[select.selectedIndex];
   var variantTitle = selectedOption.getAttribute('data-title') || selectedOption.text;
   var sale = parseFloat(zsSalePrice(p.price));
   // Check if already in cart
