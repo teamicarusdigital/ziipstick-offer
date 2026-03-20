@@ -73,11 +73,11 @@ html{scroll-behavior:smooth;}
 .zs-header__cta{display:none;}
 .zs-header__actions{display:none;}
 @media(min-width:768px){
-  .zs-header{height:91px;padding:0 40px;}
+  .zs-header{height:91px;padding:0 40px;position:relative;}
   .zs-header__hamburger{display:none;}
   .zs-header__icons{display:none;}
   .zs-header__logo{height:44px;}
-  .zs-header__trust{display:flex;align-items:center;gap:24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:#555e6d;}
+  .zs-header__trust{display:flex;align-items:center;gap:24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:#555e6d;position:absolute;left:50%;transform:translateX(-50%);}
   .zs-header__trust-item{display:flex;align-items:center;gap:6px;}
   .zs-header__actions{display:flex;align-items:center;gap:12px;}
   .zs-header__cta{display:flex;align-items:center;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.04em;padding:12px 24px;border-radius:8px;gap:6px;white-space:nowrap;}
@@ -152,7 +152,8 @@ html{scroll-behavior:smooth;}
 .zs-products__subtitle{font-family:'DM Sans',sans-serif;font-size:15px;color:#555e6d;line-height:1.5;}
 .zs-products__tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
 .zs-products__tab{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:7px 16px;border-radius:20px;border:1.5px solid #e2e4e9;color:#555e6d;cursor:pointer;background:#fff;}
-.zs-products__tab--active{background:#166e48;border-color:#166e48;color:#fff;}
+.zs-products__tab--active{background:#166e48;border-color:#166e48;}
+.zs-root .zs-products__tab--active{color:#fff;}
 .zs-products__grid{display:grid;grid-template-columns:1fr;gap:16px;}
 .zs-product-card{border:1px solid #e2e4e9;border-radius:12px;padding:16px;background:#fff;position:relative;}
 .zs-product-card__badge{display:inline-flex;align-items:center;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:12px;}
@@ -610,10 +611,10 @@ html{scroll-behavior:smooth;}
     <p class="zs-products__subtitle">Authentic devices sourced directly from official distributors.<br>Every puff, guaranteed real.</p>
   </div>
   <div class="zs-products__tabs">
-    <button class="zs-products__tab zs-products__tab--active">ALL</button>
-    <button class="zs-products__tab">MOST POPULAR</button>
-    <button class="zs-products__tab">NEW ARRIVALS</button>
-    <button class="zs-products__tab">UNDER $20</button>
+    <button class="zs-products__tab zs-products__tab--active" data-filter="all">ALL</button>
+    <button class="zs-products__tab" data-filter="popular">MOST POPULAR</button>
+    <button class="zs-products__tab" data-filter="new">NEW ARRIVALS</button>
+    <button class="zs-products__tab" data-filter="under20">UNDER $20</button>
   </div>
   <div class="zs-products__grid" id="zs-products-grid">
     <!-- Rendered by JS -->
@@ -1427,6 +1428,20 @@ var ZS_PRODUCTS = [
 ];
 
 var ZS_SHOWN = 8;
+var ZS_FILTER = 'all';
+
+function zsGetFilteredProducts() {
+  var out = [];
+  ZS_PRODUCTS.forEach(function(p, i) {
+    var ok = false;
+    if (ZS_FILTER === 'popular') ok = p.reviews >= 300;
+    else if (ZS_FILTER === 'new') ok = p.badge === 'new' || p.reviews < 200;
+    else if (ZS_FILTER === 'under20') ok = parseFloat(zsSalePrice(p.price)) < 20;
+    else ok = true;
+    if (ok) out.push({p: p, i: i});
+  });
+  return out;
+}
 
 function zsSalePrice(p){ return (p * 0.80).toFixed(2); }
 function zsOriginalPrice(p){ return p.toFixed(2); }
@@ -1461,28 +1476,44 @@ function zsProductCardHTML(p, idx) {
 function zsRenderProducts() {
   var grid = document.getElementById('zs-products-grid');
   if (!grid) return;
+  var filtered = zsGetFilteredProducts();
   var html = '';
-  var limit = Math.min(ZS_SHOWN, ZS_PRODUCTS.length);
+  var limit = Math.min(ZS_SHOWN, filtered.length);
   for (var i = 0; i < limit; i++) {
-    html += zsProductCardHTML(ZS_PRODUCTS[i], i);
+    html += zsProductCardHTML(filtered[i].p, filtered[i].i);
   }
   grid.innerHTML = html;
   var btn = document.getElementById('zs-show-more-btn');
-  if (btn) btn.style.display = ZS_SHOWN >= ZS_PRODUCTS.length ? 'none' : 'inline-block';
+  if (btn) btn.style.display = ZS_SHOWN >= filtered.length ? 'none' : 'inline-block';
 }
 
 function zsShowMore() {
   var grid = document.getElementById('zs-products-grid');
   if (!grid) return;
+  var filtered = zsGetFilteredProducts();
   var prev = ZS_SHOWN;
-  ZS_SHOWN = Math.min(ZS_SHOWN + 4, ZS_PRODUCTS.length);
+  ZS_SHOWN = Math.min(ZS_SHOWN + 4, filtered.length);
   for (var i = prev; i < ZS_SHOWN; i++) {
     var div = document.createElement('div');
-    div.innerHTML = zsProductCardHTML(ZS_PRODUCTS[i], i);
+    div.innerHTML = zsProductCardHTML(filtered[i].p, filtered[i].i);
     grid.appendChild(div.firstChild);
   }
   var btn = document.getElementById('zs-show-more-btn');
-  if (btn) btn.style.display = ZS_SHOWN >= ZS_PRODUCTS.length ? 'none' : 'inline-block';
+  if (btn) btn.style.display = ZS_SHOWN >= filtered.length ? 'none' : 'inline-block';
+}
+
+function zsInitTabs() {
+  document.querySelectorAll('.zs-products__tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.zs-products__tab').forEach(function(t) {
+        t.classList.remove('zs-products__tab--active');
+      });
+      tab.classList.add('zs-products__tab--active');
+      ZS_FILTER = tab.getAttribute('data-filter');
+      ZS_SHOWN = 8;
+      zsRenderProducts();
+    });
+  });
 }
 
 // ============================================================
@@ -1813,6 +1844,7 @@ function zsFaqToggle(questionEl) {
 document.addEventListener('DOMContentLoaded', function() {
   // Render products
   zsRenderProducts();
+  zsInitTabs();
   // Daily stock check (fetches from Shopify, cached 24h)
   zsCheckStock();
   // Update cart badges
