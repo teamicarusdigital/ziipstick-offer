@@ -31,6 +31,7 @@
 /* ============================================================
    GLOBAL RESET
 ============================================================ */
+html,body{margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 .zs-root{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;color:#111111;background:#fff;}
 .zs-root *,.zs-root *::before,.zs-root *::after{box-sizing:border-box;margin:0;padding:0;}
@@ -87,7 +88,7 @@ html{scroll-behavior:smooth;}
   background:#fff url('/images/hero-mobile.png') no-repeat bottom center;
   background-size:100% auto;
   padding:32px 16px 0;
-  min-height:calc(100vw * 1.883);
+  min-height:400px;
   display:flex;
   flex-direction:column;
 }
@@ -462,10 +463,30 @@ html{scroll-behavior:smooth;}
 .zs-header__cart-wrap{position:relative;}
 
 /* ============================================================
+   MOBILE NAV DRAWER
+============================================================ */
+.zs-nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;}
+.zs-nav-overlay--open{display:block;}
+.zs-nav-drawer{position:fixed;top:0;left:0;bottom:0;width:280px;background:#fff;z-index:301;transform:translateX(-100%);transition:transform 0.28s ease;display:flex;flex-direction:column;}
+.zs-nav-drawer--open{transform:translateX(0);}
+.zs-nav-drawer__header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid #e2e4e9;}
+.zs-nav-drawer__logo{height:32px;width:auto;}
+.zs-nav-drawer__close{background:none;border:none;cursor:pointer;font-size:24px;color:#111;line-height:1;padding:0;}
+.zs-nav-drawer__links{flex:1;padding:24px 20px;display:flex;flex-direction:column;gap:0;}
+.zs-nav-drawer__link{display:block;padding:14px 0;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#111;border-bottom:1px solid #f0f0f0;text-decoration:none;}
+.zs-nav-drawer__link:last-child{border-bottom:none;}
+.zs-nav-drawer__cta{margin:20px;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;padding:14px 20px;border-radius:8px;text-align:center;text-decoration:none;display:block;}
+@media(min-width:768px){.zs-nav-overlay,.zs-nav-drawer{display:none!important;}}
+
+/* ============================================================
    STICKY CTA (mobile only)
 ============================================================ */
-.zs-sticky{display:block;position:fixed;bottom:0;left:0;right:0;background:#166e48;padding:14px 16px;z-index:200;text-align:center;}
-.zs-sticky a{color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px;}
+.zs-sticky{display:flex;align-items:center;position:fixed;bottom:0;left:0;right:0;background:#166e48;padding:12px 16px;z-index:200;gap:12px;}
+.zs-sticky a{color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;flex:1;display:flex;align-items:center;justify-content:center;gap:8px;}
+.zs-sticky__cart{background:rgba(255,255,255,0.15);border:none;cursor:pointer;width:46px;height:46px;border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.zs-sticky__cart svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8;}
+.zs-sticky__badge{position:absolute;top:-4px;right:-4px;background:#e53935;color:#fff;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:none;align-items:center;justify-content:center;}
+.zs-sticky__badge--show{display:flex;}
 @media(min-width:768px){.zs-sticky{display:none;}}
 </style>
 </head>
@@ -784,7 +805,7 @@ html{scroll-behavior:smooth;}
 <!-- =========================================================
      SECTION 8 — REVIEWS
 ========================================================== -->
-<section class="zs-reviews">
+<section class="zs-reviews" id="reviews">
   <div class="zs-reviews__top">
     <div>
       <div class="zs-reviews__label">Social Proof</div>
@@ -945,7 +966,7 @@ html{scroll-behavior:smooth;}
 <!-- =========================================================
      SECTION 10 — FAQ
 ========================================================== -->
-<section class="zs-faq">
+<section class="zs-faq" id="faq">
   <div class="zs-faq__label">Got Questions?</div>
   <h2 class="zs-faq__h2">EVERYTHING YOU<br>NEED TO KNOW</h2>
   <p class="zs-faq__subtitle">Got Any Questions?</p>
@@ -1095,10 +1116,33 @@ html{scroll-behavior:smooth;}
 </div>
 
 <!-- =========================================================
+     MOBILE NAV DRAWER
+========================================================== -->
+<div class="zs-nav-overlay" id="zs-nav-overlay" onclick="zsNavClose()"></div>
+<div class="zs-nav-drawer" id="zs-nav-drawer" role="dialog" aria-label="Navigation">
+  <div class="zs-nav-drawer__header">
+    <img src="/images/logo.png" alt="Ziipstick" class="zs-nav-drawer__logo" />
+    <button class="zs-nav-drawer__close" onclick="zsNavClose()" aria-label="Close menu">×</button>
+  </div>
+  <div class="zs-nav-drawer__links">
+    <a href="#products" class="zs-nav-drawer__link" onclick="zsNavClose()">Shop All Devices</a>
+    <a href="#products" class="zs-nav-drawer__link" onclick="zsNavClose()">Best Sellers</a>
+    <a href="#reviews" class="zs-nav-drawer__link" onclick="zsNavClose()">Reviews</a>
+    <a href="#faq" class="zs-nav-drawer__link" onclick="zsNavClose()">FAQ</a>
+    <a href="https://ziipstick.com" class="zs-nav-drawer__link">All Products →</a>
+  </div>
+  <a href="#products" class="zs-nav-drawer__cta" onclick="zsNavClose()">CLAIM 20% OFF ↑</a>
+</div>
+
+<!-- =========================================================
      STICKY MOBILE CTA
 ========================================================== -->
 <div class="zs-sticky">
   <a href="#products">CLAIM 20% OFF – SHOP NOW ↑</a>
+  <button class="zs-sticky__cart" onclick="zsCartOpen()" aria-label="Open cart">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span class="zs-sticky__badge" id="zs-badge-sticky">0</span>
+  </button>
 </div>
 
 <!-- =========================================================
@@ -1292,7 +1336,28 @@ function zsUpdateBadges() {
     if (count > 0) b.classList.add('zs-cart-badge--show');
     else b.classList.remove('zs-cart-badge--show');
   });
+  var sb = document.getElementById('zs-badge-sticky');
+  if (sb) {
+    sb.textContent = count;
+    if (count > 0) sb.classList.add('zs-sticky__badge--show');
+    else sb.classList.remove('zs-sticky__badge--show');
+  }
 }
+
+// ============================================================
+// MOBILE NAV DRAWER
+// ============================================================
+function zsNavOpen() {
+  document.getElementById('zs-nav-drawer').classList.add('zs-nav-drawer--open');
+  document.getElementById('zs-nav-overlay').classList.add('zs-nav-overlay--open');
+  document.body.style.overflow = 'hidden';
+}
+function zsNavClose() {
+  document.getElementById('zs-nav-drawer').classList.remove('zs-nav-drawer--open');
+  document.getElementById('zs-nav-overlay').classList.remove('zs-nav-overlay--open');
+  document.body.style.overflow = '';
+}
+document.querySelector('.zs-header__hamburger').addEventListener('click', zsNavOpen);
 
 function zsCartOpen() {
   zsRenderCart();
