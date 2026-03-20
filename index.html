@@ -40,6 +40,7 @@ html{scroll-behavior:smooth;}
 .zs-root button{cursor:pointer;border:none;font-family:'DM Sans',sans-serif;color:inherit;}
 /* Explicit resets for buttons that should be transparent */
 .zs-root .zs-cart-item__remove,.zs-root .zs-cart__close{background:none;}
+.zs-root .zs-products__more-btn{color:#fff;}
 
 /* ============================================================
    SECTION 0 — ANNOUNCEMENT BAR
@@ -1435,8 +1436,14 @@ function zsProductCardHTML(p, idx) {
   var orig = zsOriginalPrice(p.price);
   var badgeHtml = p.badge ? '<span class="zs-product-card__badge zs-product-card__badge--'+p.badge+'">'+p.badgeText+'</span>' : '<span style="display:block;height:26px;margin-bottom:12px;"></span>';
   var tagsHtml = p.tags.map(function(t){ return '<span class="zs-product-card__tag">'+t+'</span>'; }).join('');
-  var variantsHtml = p.variants.map(function(v){ return '<option value="'+v.id+'" data-title="'+v.title+'">'+v.title+'</option>'; }).join('');
+  var variantsHtml = p.variants.map(function(v){
+    var oos = v.available === false;
+    return '<option value="'+v.id+'"'+(oos?' disabled':'')+'>'+v.title+(oos?' – Out of Stock':'')+'</option>';
+  }).join('');
+  var allOos = p.outOfStock;
   var reviewsFmt = p.reviews.toLocaleString();
+  var btnText = allOos ? 'OUT OF STOCK' : 'ADD TO CART – SAVE 20%';
+  var btnExtra = allOos ? ' disabled style="background:#8693a7;cursor:not-allowed;"' : '';
   return '<div class="zs-product-card" data-product-idx="'+idx+'">'
     + badgeHtml
     + '<img src="'+p.image+'" alt="'+p.brand+' '+p.title+'" class="zs-product-card__img" loading="lazy" />'
@@ -1445,8 +1452,8 @@ function zsProductCardHTML(p, idx) {
     + '<div class="zs-product-card__tags">'+tagsHtml+'</div>'
     + '<div class="zs-product-card__stars"><span class="zs-product-card__stars-icons">★★★★★</span><span class="zs-product-card__stars-count">('+reviewsFmt+' reviews)</span></div>'
     + '<div class="zs-product-card__pricing"><span class="zs-product-card__original">$'+orig+'</span><span class="zs-product-card__sale">$'+sale+'</span><span class="zs-product-card__save">Save 20%</span></div>'
-    + '<select class="zs-product-card__select" data-product-idx="'+idx+'"><option value="" disabled selected>Select Flavor</option>'+variantsHtml+'</select>'
-    + '<button class="zs-product-card__btn" data-product-idx="'+idx+'" onclick="zsAddToCart('+idx+', this)">ADD TO CART – SAVE 20%</button>'
+    + '<select class="zs-product-card__select" data-product-idx="'+idx+'"'+(allOos?' disabled':'')+'><option value="" disabled selected>Select Flavor</option>'+variantsHtml+'</select>'
+    + '<button class="zs-product-card__btn" data-product-idx="'+idx+'" onclick="zsAddToCart('+idx+', this)"'+btnExtra+'>'+btnText+'</button>'
     + '<div class="zs-product-card__guarantee">🔒 Secure · 30-Day Guarantee</div>'
     + '</div>';
 }
@@ -1476,6 +1483,91 @@ function zsShowMore() {
   }
   var btn = document.getElementById('zs-show-more-btn');
   if (btn) btn.style.display = ZS_SHOWN >= ZS_PRODUCTS.length ? 'none' : 'inline-block';
+}
+
+// ============================================================
+// DAILY STOCK CHECK
+// ============================================================
+var ZS_STOCK_KEY = 'zs_stock_cache';
+var ZS_STOCK_TTL = 24 * 60 * 60 * 1000;
+
+function zsCheckStock() {
+  try {
+    var cached = JSON.parse(localStorage.getItem(ZS_STOCK_KEY) || 'null');
+    if (cached && (Date.now() - cached.ts) < ZS_STOCK_TTL) {
+      zsApplyStock(cached.data);
+      return;
+    }
+  } catch(e) {}
+  zsFetchAllStock();
+}
+
+function zsFetchAllStock() {
+  var stock = {};
+  var total = ZS_PRODUCTS.length;
+  var done = 0;
+  ZS_PRODUCTS.forEach(function(p) {
+    fetch('https://ziipstick.com/products/' + p.handle + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        stock[p.handle] = {};
+        (d.product.variants || []).forEach(function(v) {
+          stock[p.handle][v.id] = v.available;
+        });
+      })
+      .catch(function() { stock[p.handle] = null; })
+      .then(function() {
+        done++;
+        if (done === total) {
+          try { localStorage.setItem(ZS_STOCK_KEY, JSON.stringify({ts: Date.now(), data: stock})); } catch(e) {}
+          zsApplyStock(stock);
+        }
+      });
+  });
+}
+
+function zsApplyStock(stock) {
+  var anyChange = false;
+  ZS_PRODUCTS.forEach(function(p) {
+    var pStock = stock[p.handle];
+    if (!pStock) return;
+    p.variants.forEach(function(v) {
+      v.available = pStock[v.id] !== false;
+    });
+    var wasOos = p.outOfStock;
+    p.outOfStock = p.variants.every(function(v) { return v.available === false; });
+    if (wasOos !== p.outOfStock) anyChange = true;
+    p.variants.forEach(function(v) { if (pStock[v.id] !== undefined && pStock[v.id] !== (v.available)) anyChange = true; });
+  });
+  zsUpdateStockUI();
+}
+
+function zsUpdateStockUI() {
+  document.querySelectorAll('.zs-product-card').forEach(function(card) {
+    var idx = parseInt(card.getAttribute('data-product-idx'));
+    if (isNaN(idx)) return;
+    var p = ZS_PRODUCTS[idx];
+    if (!p) return;
+    var sel = card.querySelector('.zs-product-card__select');
+    if (sel) {
+      Array.from(sel.options).forEach(function(opt) {
+        if (!opt.value) return;
+        var v = p.variants.find(function(v) { return String(v.id) === opt.value; });
+        if (v && v.available === false) {
+          opt.disabled = true;
+          if (opt.text.indexOf('Out of Stock') === -1) opt.text = v.title + ' – Out of Stock';
+        }
+      });
+      if (p.outOfStock) sel.disabled = true;
+    }
+    var btn = card.querySelector('.zs-product-card__btn');
+    if (btn && p.outOfStock) {
+      btn.textContent = 'OUT OF STOCK';
+      btn.disabled = true;
+      btn.style.background = '#8693a7';
+      btn.style.cursor = 'not-allowed';
+    }
+  });
 }
 
 // ============================================================
@@ -1716,6 +1808,8 @@ function zsFaqToggle(questionEl) {
 document.addEventListener('DOMContentLoaded', function() {
   // Render products
   zsRenderProducts();
+  // Daily stock check (fetches from Shopify, cached 24h)
+  zsCheckStock();
   // Update cart badges
   zsUpdateBadges();
   // Desktop video extras
