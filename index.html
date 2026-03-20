@@ -1438,7 +1438,7 @@ function zsProductCardHTML(p, idx) {
   var tagsHtml = p.tags.map(function(t){ return '<span class="zs-product-card__tag">'+t+'</span>'; }).join('');
   var variantsHtml = p.variants.map(function(v){
     var oos = v.available === false;
-    return '<option value="'+v.id+'"'+(oos?' disabled':'')+'>'+v.title+(oos?' – Out of Stock':'')+'</option>';
+    return '<option value="'+v.id+'" data-title="'+v.title+'" data-available="'+(oos?'0':'1')+'"'+(oos?' disabled':'')+'>'+v.title+(oos?' – Out of Stock':'')+'</option>';
   }).join('');
   var allOos = p.outOfStock;
   var reviewsFmt = p.reviews.toLocaleString();
@@ -1555,6 +1555,7 @@ function zsUpdateStockUI() {
         var v = p.variants.find(function(v) { return String(v.id) === opt.value; });
         if (v && v.available === false) {
           opt.disabled = true;
+          opt.setAttribute('data-available', '0');
           if (opt.text.indexOf('Out of Stock') === -1) opt.text = v.title + ' – Out of Stock';
         }
       });
@@ -1715,8 +1716,14 @@ function zsAddToCart(productIdx, btn) {
     setTimeout(function(){ select.style.borderColor = '#e2e4e9'; }, 2000);
     return;
   }
+  var selectedOption = select.options[select.selectedIndex];
+  if (selectedOption.getAttribute('data-available') === '0') {
+    select.style.borderColor = '#e53935';
+    setTimeout(function(){ select.style.borderColor = '#e2e4e9'; }, 2000);
+    return;
+  }
   var variantId = parseInt(select.value);
-  var variantTitle = select.options[select.selectedIndex].getAttribute('data-title');
+  var variantTitle = selectedOption.getAttribute('data-title') || selectedOption.text;
   var sale = parseFloat(zsSalePrice(p.price));
   // Check if already in cart
   var existing = ZS_CART.find(function(item){ return item.variantId === variantId; });
