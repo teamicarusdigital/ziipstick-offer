@@ -164,7 +164,8 @@ html{scroll-behavior:smooth;}
 .zs-product-card__badge--bestvalue{background:#f4c11a;color:#fff;}
 .zs-product-card__img{width:180px;height:180px;object-fit:contain;margin:0 auto 12px;}
 .zs-product-card__brand{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;color:#166e48;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;}
-.zs-product-card__name{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:#111111;margin-bottom:8px;}
+.zs-product-card__name{font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;color:#111111;margin-bottom:8px;display:block;text-decoration:none;}
+.zs-product-card__name:hover{color:#166e48;}
 .zs-product-card__tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
 .zs-product-card__tag{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:#555e6d;background:#f0f2f5;padding:3px 9px;border-radius:20px;}
 .zs-product-card__stars{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
@@ -1450,11 +1451,12 @@ function zsProductCardHTML(p, idx) {
   var reviewsFmt = p.reviews.toLocaleString();
   var btnText = allOos ? 'OUT OF STOCK' : 'ADD TO CART – SAVE 20%';
   var btnExtra = allOos ? ' disabled style="background:#8693a7;cursor:not-allowed;"' : '';
+  var productUrl = 'https://ziipstick.com/products/' + p.handle;
   return '<div class="zs-product-card" data-product-idx="'+idx+'">'
     + badgeHtml
-    + '<img src="'+p.image+'" alt="'+p.brand+' '+p.title+'" class="zs-product-card__img" loading="lazy" />'
+    + '<a href="'+productUrl+'" target="_blank" rel="noopener"><img src="'+p.image+'" alt="'+p.brand+' '+p.title+'" class="zs-product-card__img" loading="lazy" /></a>'
     + '<div class="zs-product-card__brand">'+p.brand+'</div>'
-    + '<div class="zs-product-card__name">'+p.title+'</div>'
+    + '<a href="'+productUrl+'" target="_blank" rel="noopener" class="zs-product-card__name">'+p.title+'</a>'
     + '<div class="zs-product-card__tags">'+tagsHtml+'</div>'
     + '<div class="zs-product-card__stars"><span class="zs-product-card__stars-icons">★★★★★</span><span class="zs-product-card__stars-count">('+reviewsFmt+' reviews)</span></div>'
     + '<div class="zs-product-card__pricing"><span class="zs-product-card__original">$'+orig+'</span><span class="zs-product-card__sale">$'+sale+'</span><span class="zs-product-card__save">Save 20%</span></div>'
