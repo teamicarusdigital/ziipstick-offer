@@ -70,6 +70,7 @@ html{scroll-behavior:smooth;}
 .zs-header__icon svg{width:20px;height:20px;stroke:#166e48;fill:none;stroke-width:1.8;}
 .zs-header__trust{display:none;}
 .zs-header__cta{display:none;}
+.zs-header__actions{display:none;}
 @media(min-width:768px){
   .zs-header{height:91px;padding:0 40px;}
   .zs-header__hamburger{display:none;}
@@ -77,6 +78,7 @@ html{scroll-behavior:smooth;}
   .zs-header__logo{height:44px;}
   .zs-header__trust{display:flex;align-items:center;gap:24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:#555e6d;}
   .zs-header__trust-item{display:flex;align-items:center;gap:6px;}
+  .zs-header__actions{display:flex;align-items:center;gap:12px;}
   .zs-header__cta{display:flex;align-items:center;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.04em;padding:12px 24px;border-radius:8px;gap:6px;white-space:nowrap;}
   .zs-header__cta:hover{background:#125c3c;}
 }
@@ -522,15 +524,18 @@ html{scroll-behavior:smooth;}
     <span class="zs-header__trust-item">🚚 Ships in 1–2 Days</span>
   </div>
   <div class="zs-header__icons">
-    <span class="zs-header__icon">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </span>
     <span class="zs-header__icon zs-header__cart-wrap" id="zs-cart-btn-mobile" style="cursor:pointer;" onclick="zsCartOpen()">
       <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span class="zs-cart-badge" id="zs-badge-mobile">0</span>
     </span>
   </div>
-  <a href="#products" class="zs-header__cta">CLAIM 20% OFF ↓</a>
+  <div class="zs-header__actions">
+    <span class="zs-header__icon zs-header__cart-wrap" style="cursor:pointer;" onclick="zsCartOpen()">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span class="zs-cart-badge" id="zs-badge-desktop">0</span>
+    </span>
+    <a href="#products" class="zs-header__cta">CLAIM 20% OFF ↓</a>
+  </div>
 </header>
 
 <!-- =========================================================
@@ -1341,6 +1346,12 @@ function zsUpdateBadges() {
     sb.textContent = count;
     if (count > 0) sb.classList.add('zs-sticky__badge--show');
     else sb.classList.remove('zs-sticky__badge--show');
+  }
+  var db = document.getElementById('zs-badge-desktop');
+  if (db) {
+    db.textContent = count;
+    if (count > 0) db.classList.add('zs-cart-badge--show');
+    else db.classList.remove('zs-cart-badge--show');
   }
 }
 
