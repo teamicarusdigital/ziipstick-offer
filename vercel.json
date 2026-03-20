@@ -10,6 +10,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/", "destination": "/api/home" },
     { "source": "/pages/worldwide-favorites", "destination": "/pages/worldwide-favorites/index.html" },
     { "source": "/pages/worldwide-favorites/", "destination": "/pages/worldwide-favorites/index.html" }
   ]
