@@ -1488,10 +1488,8 @@ function zsShowMore() {
 // ============================================================
 // DAILY STOCK CHECK (Shopify Storefront API)
 // ============================================================
-var ZS_STOCK_KEY = 'zs_stock_cache_v2';
+var ZS_STOCK_KEY = 'zs_stock_cache_v3';
 var ZS_STOCK_TTL = 24 * 60 * 60 * 1000;
-var ZS_SF_TOKEN = '78b3d5687e75f05f425121a18ba1dd72';
-var ZS_SF_URL = 'https://ziipstick.com/api/2024-04/graphql.json';
 
 function zsCheckStock() {
   try {
@@ -1505,34 +1503,25 @@ function zsCheckStock() {
 }
 
 function zsFetchAllStock() {
-  var aliases = ZS_PRODUCTS.map(function(p, i) {
-    return 'p' + i + ': product(handle: "' + p.handle + '") { variants(first: 100) { edges { node { id availableForSale } } } }';
-  }).join(' ');
-  fetch(ZS_SF_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': ZS_SF_TOKEN
-    },
-    body: JSON.stringify({ query: '{ ' + aliases + ' }' })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (!data || !data.data) return;
-    var stock = {};
-    ZS_PRODUCTS.forEach(function(p, i) {
-      var pd = data.data['p' + i];
-      if (!pd) return;
-      stock[p.handle] = {};
-      pd.variants.edges.forEach(function(edge) {
-        var numericId = parseInt(edge.node.id.split('/').pop());
-        stock[p.handle][numericId] = edge.node.availableForSale;
+  var handles = ZS_PRODUCTS.map(function(p){ return p.handle; }).join(',');
+  fetch('/api/stock?handles=' + handles)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data) return;
+      // Normalise keys: server returns string keys, our variant IDs are numbers
+      var stock = {};
+      ZS_PRODUCTS.forEach(function(p) {
+        var raw = data[p.handle];
+        if (!raw) return;
+        stock[p.handle] = {};
+        Object.keys(raw).forEach(function(k) {
+          stock[p.handle][parseInt(k)] = raw[k];
+        });
       });
-    });
-    try { localStorage.setItem(ZS_STOCK_KEY, JSON.stringify({ts: Date.now(), data: stock})); } catch(e) {}
-    zsApplyStock(stock);
-  })
-  .catch(function() {});
+      try { localStorage.setItem(ZS_STOCK_KEY, JSON.stringify({ts: Date.now(), data: stock})); } catch(e) {}
+      zsApplyStock(stock);
+    })
+    .catch(function() {});
 }
 
 function zsApplyStock(stock) {
