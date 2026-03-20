@@ -1428,15 +1428,24 @@ function zsGetFilteredProducts() {
     var ok = false;
     if (ZS_FILTER === 'popular') ok = p.reviews >= 300;
     else if (ZS_FILTER === 'new') ok = p.badge === 'new' || p.reviews < 200;
-    else if (ZS_FILTER === 'under20') ok = parseFloat(zsSalePrice(p.price)) < 20;
+    else if (ZS_FILTER === 'under20') ok = (p.price * 0.80) < 20;
     else ok = true;
     if (ok) out.push({p: p, i: i});
   });
   return out;
 }
 
-function zsSalePrice(p){ return (p * 0.80).toFixed(2); }
-function zsOriginalPrice(p){ return p.toFixed(2); }
+function zsRoundIfNine(price) {
+  var v = Math.round(price * 100) / 100;
+  var cents = Math.round(v * 100) % 100;
+  return (cents % 10 === 9) ? Math.ceil(v) : v;
+}
+function zsFormatPrice(price) {
+  var v = zsRoundIfNine(price);
+  return (v % 1 === 0) ? v.toFixed(0) : v.toFixed(2);
+}
+function zsSalePrice(p){ return zsFormatPrice(p * 0.80); }
+function zsOriginalPrice(p){ return zsFormatPrice(p); }
 
 function zsProductCardHTML(p, idx) {
   var sale = zsSalePrice(p.price);
@@ -1693,8 +1702,8 @@ function zsRenderCart() {
       + '<button class="zs-cart-item__qty-btn" onclick="zsQtyChange('+i+',1)">+</button>'
       + '</div>'
       + '<div class="zs-cart-item__price-col">'
-      + '<span class="zs-cart-item__original">$'+(item.price * item.qty).toFixed(2)+'</span>'
-      + '<span class="zs-cart-item__price">$'+(item.salePrice * item.qty).toFixed(2)+'</span>'
+      + '<span class="zs-cart-item__original">$'+zsFormatPrice(item.price * item.qty)+'</span>'
+      + '<span class="zs-cart-item__price">$'+zsFormatPrice(item.salePrice * item.qty)+'</span>'
       + '</div>'
       + '</div>'
       + '</div>'
@@ -1707,8 +1716,8 @@ function zsRenderCart() {
   var savings = original - subtotal;
   var subtotalEl = document.getElementById('zs-cart-subtotal');
   var savingsEl = document.getElementById('zs-cart-savings');
-  if (subtotalEl) subtotalEl.textContent = '$' + subtotal.toFixed(2);
-  if (savingsEl) savingsEl.textContent = 'You\'re saving $' + savings.toFixed(2) + ' today!';
+  if (subtotalEl) subtotalEl.textContent = '$' + zsFormatPrice(subtotal);
+  if (savingsEl) savingsEl.textContent = 'You\'re saving $' + zsFormatPrice(savings) + ' today!';
 }
 
 function zsQtyChange(idx, delta) {
