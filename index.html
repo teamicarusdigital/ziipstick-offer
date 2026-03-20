@@ -35,7 +35,9 @@
 .zs-root *,.zs-root *::before,.zs-root *::after{box-sizing:border-box;margin:0;padding:0;}
 .zs-root img{max-width:100%;display:block;}
 .zs-root a{text-decoration:none;color:inherit;}
-.zs-root button{cursor:pointer;border:none;background:none;font-family:inherit;}
+.zs-root button{cursor:pointer;border:none;font-family:'DM Sans',sans-serif;color:inherit;}
+/* Explicit resets for buttons that should be transparent */
+.zs-root .zs-cart-item__remove,.zs-root .zs-cart__close{background:none;}
 
 /* ============================================================
    SECTION 0 — ANNOUNCEMENT BAR
@@ -382,6 +384,35 @@
   .zs-footer__top{flex-direction:row;justify-content:space-between;align-items:flex-start;}
   .zs-footer__links{flex-direction:row;gap:32px;}
 }
+
+/* ============================================================
+   GLOBAL CTA COLOUR LOCK — every green button = white text
+============================================================ */
+.zs-root .zs-hero__cta,
+.zs-root .zs-header__cta,
+.zs-root .zs-product-card__btn,
+.zs-root .zs-compare__cta,
+.zs-root .zs-reviews__cta,
+.zs-root .zs-urgency__cta,
+.zs-root .zs-faq__cta,
+.zs-root .zs-cart__checkout,
+.zs-root .zs-sticky a {
+  background:#166e48;
+  color:#fff;
+}
+.zs-root .zs-hero__cta:hover,
+.zs-root .zs-header__cta:hover,
+.zs-root .zs-product-card__btn:hover,
+.zs-root .zs-compare__cta:hover,
+.zs-root .zs-urgency__cta:hover,
+.zs-root .zs-faq__cta:hover,
+.zs-root .zs-cart__checkout:hover { background:#125c3c; color:#fff; }
+.zs-root .zs-reviews__cta {
+  background:transparent;
+  border:2px solid #166e48;
+  color:#fff;
+}
+.zs-root .zs-reviews__cta:hover { background:#166e48; color:#fff; }
 
 /* ============================================================
    VARIANT SELECTOR
