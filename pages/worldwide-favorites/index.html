@@ -1435,17 +1435,13 @@ function zsGetFilteredProducts() {
   return out;
 }
 
-function zsRoundIfNine(price) {
-  var v = Math.round(price * 100) / 100;
-  var cents = Math.round(v * 100) % 100;
-  return (cents % 10 === 9) ? Math.ceil(v) : v;
-}
 function zsFormatPrice(price) {
-  var v = zsRoundIfNine(price);
-  return (v % 1 === 0) ? v.toFixed(0) : v.toFixed(2);
+  var cents = Math.round(price * 100);
+  if (cents % 10 === 9) cents += 1;
+  return (cents / 100).toFixed(2);
 }
-function zsSalePrice(p){ return zsFormatPrice(p * 0.80); }
-function zsOriginalPrice(p){ return zsFormatPrice(p); }
+function zsSalePrice(p) { return zsFormatPrice(p * 0.80); }
+function zsOriginalPrice(p) { return zsFormatPrice(p); }
 
 function zsProductCardHTML(p, idx) {
   var sale = zsSalePrice(p.price);
