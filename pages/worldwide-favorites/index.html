@@ -1141,7 +1141,7 @@ html{scroll-behavior:smooth;}
      STICKY MOBILE CTA
 ========================================================== -->
 <div class="zs-sticky">
-  <a href="#products">CLAIM 20% OFF – SHOP NOW ↑</a>
+  <a href="#products" id="zs-sticky-cta">CLAIM 20% OFF – SHOP NOW <span id="zs-sticky-arrow">↑</span></a>
   <button class="zs-sticky__cart" onclick="zsCartOpen()" aria-label="Open cart">
     <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
     <span class="zs-sticky__badge" id="zs-badge-sticky">0</span>
@@ -1854,6 +1854,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (v4) v4.style.display = 'block';
     if (v5) v5.style.display = 'block';
   }
+  // Sticky arrow direction — up if products section is above viewport, down if below
+  function zsUpdateStickyArrow() {
+    var arrow = document.getElementById('zs-sticky-arrow');
+    var section = document.getElementById('products');
+    if (!arrow || !section) return;
+    var rect = section.getBoundingClientRect();
+    arrow.textContent = rect.top < 0 ? '↑' : '↓';
+  }
+  zsUpdateStickyArrow();
+  window.addEventListener('scroll', zsUpdateStickyArrow, {passive: true});
+
   // UTM forwarding on all outbound links
   var root = document.querySelector('.zs-root');
   if (root) {
