@@ -542,7 +542,7 @@ html{scroll-behavior:smooth;}
       <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span class="zs-cart-badge" id="zs-badge-desktop">0</span>
     </span>
-    <a href="#products" class="zs-header__cta">CLAIM 20% OFF ↓</a>
+    <a href="#products" class="zs-header__cta">CLAIM 20% OFF <span id="zs-header-arrow">↓</span></a>
   </div>
 </header>
 
@@ -1856,11 +1856,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   // Sticky arrow direction — up if products section is above viewport, down if below
   function zsUpdateStickyArrow() {
-    var arrow = document.getElementById('zs-sticky-arrow');
     var section = document.getElementById('products');
-    if (!arrow || !section) return;
+    if (!section) return;
     var rect = section.getBoundingClientRect();
-    arrow.textContent = rect.top < 0 ? '↑' : '↓';
+    var dir = rect.top < 0 ? '↑' : '↓';
+    var a1 = document.getElementById('zs-sticky-arrow');
+    var a2 = document.getElementById('zs-header-arrow');
+    if (a1) a1.textContent = dir;
+    if (a2) a2.textContent = dir;
   }
   zsUpdateStickyArrow();
   window.addEventListener('scroll', zsUpdateStickyArrow, {passive: true});
