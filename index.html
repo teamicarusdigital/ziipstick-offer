@@ -1486,10 +1486,12 @@ function zsShowMore() {
 }
 
 // ============================================================
-// DAILY STOCK CHECK
+// DAILY STOCK CHECK (Shopify Storefront API)
 // ============================================================
-var ZS_STOCK_KEY = 'zs_stock_cache';
+var ZS_STOCK_KEY = 'zs_stock_cache_v2';
 var ZS_STOCK_TTL = 24 * 60 * 60 * 1000;
+var ZS_SF_TOKEN = '78b3d5687e75f05f425121a18ba1dd72';
+var ZS_SF_URL = 'https://ziipstick.com/api/2024-04/graphql.json';
 
 function zsCheckStock() {
   try {
@@ -1503,27 +1505,34 @@ function zsCheckStock() {
 }
 
 function zsFetchAllStock() {
-  var stock = {};
-  var total = ZS_PRODUCTS.length;
-  var done = 0;
-  ZS_PRODUCTS.forEach(function(p) {
-    fetch('https://ziipstick.com/products/' + p.handle + '.json')
-      .then(function(r) { return r.json(); })
-      .then(function(d) {
-        stock[p.handle] = {};
-        (d.product.variants || []).forEach(function(v) {
-          stock[p.handle][v.id] = v.available;
-        });
-      })
-      .catch(function() { stock[p.handle] = null; })
-      .then(function() {
-        done++;
-        if (done === total) {
-          try { localStorage.setItem(ZS_STOCK_KEY, JSON.stringify({ts: Date.now(), data: stock})); } catch(e) {}
-          zsApplyStock(stock);
-        }
+  var aliases = ZS_PRODUCTS.map(function(p, i) {
+    return 'p' + i + ': product(handle: "' + p.handle + '") { variants(first: 100) { edges { node { id availableForSale } } } }';
+  }).join(' ');
+  fetch(ZS_SF_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': ZS_SF_TOKEN
+    },
+    body: JSON.stringify({ query: '{ ' + aliases + ' }' })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data || !data.data) return;
+    var stock = {};
+    ZS_PRODUCTS.forEach(function(p, i) {
+      var pd = data.data['p' + i];
+      if (!pd) return;
+      stock[p.handle] = {};
+      pd.variants.edges.forEach(function(edge) {
+        var numericId = parseInt(edge.node.id.split('/').pop());
+        stock[p.handle][numericId] = edge.node.availableForSale;
       });
-  });
+    });
+    try { localStorage.setItem(ZS_STOCK_KEY, JSON.stringify({ts: Date.now(), data: stock})); } catch(e) {}
+    zsApplyStock(stock);
+  })
+  .catch(function() {});
 }
 
 function zsApplyStock(stock) {
