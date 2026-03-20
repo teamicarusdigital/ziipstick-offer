@@ -450,6 +450,8 @@ html{scroll-behavior:smooth;}
 .zs-cart-item__qty-btn:hover{background:#e2e4e9;}
 .zs-cart-item__qty-num{width:32px;text-align:center;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#111;}
 .zs-cart-item__price{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:#166e48;}
+.zs-cart-item__original{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:400;color:#8693a7;text-decoration:line-through;margin-bottom:2px;}
+.zs-cart-item__price-col{display:flex;flex-direction:column;align-items:flex-end;}
 .zs-cart-item__remove{background:none;border:none;cursor:pointer;color:#8693a7;font-size:18px;padding:4px;line-height:1;}
 .zs-cart__footer{padding:16px 20px;border-top:1px solid #e2e4e9;}
 .zs-cart__subtotal{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
@@ -1412,7 +1414,10 @@ function zsRenderCart() {
       + '<span class="zs-cart-item__qty-num">'+item.qty+'</span>'
       + '<button class="zs-cart-item__qty-btn" onclick="zsQtyChange('+i+',1)">+</button>'
       + '</div>'
+      + '<div class="zs-cart-item__price-col">'
+      + '<span class="zs-cart-item__original">$'+(item.price * item.qty).toFixed(2)+'</span>'
       + '<span class="zs-cart-item__price">$'+(item.salePrice * item.qty).toFixed(2)+'</span>'
+      + '</div>'
       + '</div>'
       + '</div>'
       + '<button class="zs-cart-item__remove" onclick="zsRemoveItem('+i+')" title="Remove">×</button>'
@@ -1491,9 +1496,9 @@ function zsAddToCart(productIdx, btn) {
 function zsCartCheckout() {
   if (ZS_CART.length === 0) return;
   var items = ZS_CART.map(function(item){ return item.variantId + ':' + item.qty; }).join(',');
-  var url = 'https://ziipstick.com/cart/' + items;
+  var url = 'https://ziipstick.com/cart/' + items + '?discount=GEEK20';
   var saved = getSavedParams();
-  if (saved) url += '?' + saved;
+  if (saved) url += '&' + saved;
   window.open(url, '_blank');
 }
 
