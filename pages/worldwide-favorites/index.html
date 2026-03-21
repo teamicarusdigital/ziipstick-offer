@@ -595,11 +595,6 @@ html{scroll-behavior:smooth;}
     <img src="/images/lifestyle-2.png" alt="eJuice Magazine" class="zs-press__logo" />
     <img src="/images/lifestyle-3.png" alt="SIGMAGAZINE" class="zs-press__logo" />
     <img src="/images/lifestyle-4.png" alt="VapeBusiness NEXTGEN" class="zs-press__logo" />
-    <!-- Duplicate for seamless scroll -->
-    <img src="/images/lifestyle-1.png" alt="VapingPost" class="zs-press__logo" aria-hidden="true" />
-    <img src="/images/lifestyle-2.png" alt="eJuice Magazine" class="zs-press__logo" aria-hidden="true" />
-    <img src="/images/lifestyle-3.png" alt="SIGMAGAZINE" class="zs-press__logo" aria-hidden="true" />
-    <img src="/images/lifestyle-4.png" alt="VapeBusiness NEXTGEN" class="zs-press__logo" aria-hidden="true" />
   </div>
 </div>
 
@@ -1854,6 +1849,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (v4) v4.style.display = 'block';
     if (v5) v5.style.display = 'block';
   }
+  // Press ticker — clone logos until track fills 3x viewport, then animate by exact one-set width
+  (function() {
+    var track = document.getElementById('zs-press-track');
+    if (!track) return;
+    var origItems = Array.from(track.children);
+    // Clone until track is wider than 3× viewport
+    while (track.scrollWidth < window.innerWidth * 3) {
+      origItems.forEach(function(item) {
+        var c = item.cloneNode(true);
+        c.setAttribute('aria-hidden', 'true');
+        track.appendChild(c);
+      });
+    }
+    // Measure exact pixel width of one original set (logo widths + margins)
+    var oneSet = origItems.reduce(function(acc, el) {
+      return acc + el.offsetWidth + parseFloat(window.getComputedStyle(el).marginRight);
+    }, 0);
+    // Override animation keyframe with exact pixel distance instead of -50%
+    var s = document.createElement('style');
+    s.textContent = '@keyframes zs-scroll{from{transform:translateX(0)}to{transform:translateX(-' + Math.round(oneSet) + 'px)}}';
+    document.head.appendChild(s);
+  })();
+
   // Sticky arrow direction — up if products section is above viewport, down if below
   function zsUpdateStickyArrow() {
     var section = document.getElementById('products');
