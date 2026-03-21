@@ -80,6 +80,13 @@ html{scroll-behavior:smooth;}
   .zs-header__logo{height:44px;}
   .zs-header__trust{display:flex;align-items:center;gap:24px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:#555e6d;position:absolute;left:50%;transform:translateX(-50%);}
   .zs-header__trust-item{display:flex;align-items:center;gap:6px;}
+  .zs-ti{display:inline-block;}
+  .zs-ti--lock{animation:zs-lock 3s ease-in-out infinite;}
+  .zs-ti--star{animation:zs-star 2.4s ease-in-out infinite 0.6s;}
+  .zs-ti--truck{animation:zs-truck 2.8s ease-in-out infinite 1.2s;}
+  @keyframes zs-lock{0%,60%,100%{transform:translateY(0) scale(1);}30%{transform:translateY(-5px) scale(1.2);}50%{transform:translateY(1px) scale(0.92);}}
+  @keyframes zs-star{0%,55%,100%{transform:scale(1) rotate(0deg);}20%{transform:scale(1.35) rotate(-25deg);}40%{transform:scale(1.35) rotate(25deg);}}
+  @keyframes zs-truck{0%,65%,100%{transform:translateX(0) translateY(0);}20%{transform:translateX(6px) translateY(-3px);}35%{transform:translateX(10px) translateY(0);}50%{transform:translateX(4px) translateY(-2px);}}
   .zs-header__actions{display:flex;align-items:center;gap:12px;}
   .zs-header__cta{display:flex;align-items:center;background:#166e48;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.04em;padding:12px 24px;border-radius:8px;gap:6px;white-space:nowrap;}
   .zs-header__cta:hover{background:#125c3c;}
@@ -527,9 +534,9 @@ html{scroll-behavior:smooth;}
     <img src="/images/logo.png" alt="Ziipstick" class="zs-header__logo" />
   </a>
   <div class="zs-header__trust">
-    <span class="zs-header__trust-item">🔒 Secure Checkout</span>
-    <span class="zs-header__trust-item">⭐ 4.9/5 · 50K+ Customers</span>
-    <span class="zs-header__trust-item">🚚 Ships in 1–2 Days</span>
+    <span class="zs-header__trust-item"><span class="zs-ti zs-ti--lock">🔒</span> Secure Checkout</span>
+    <span class="zs-header__trust-item"><span class="zs-ti zs-ti--star">⭐</span> 4.9/5 · 50K+ Customers</span>
+    <span class="zs-header__trust-item"><span class="zs-ti zs-ti--truck">🚚</span> Ships in 1–2 Days</span>
   </div>
   <div class="zs-header__icons">
     <span class="zs-header__icon zs-header__cart-wrap" id="zs-cart-btn-mobile" style="cursor:pointer;" onclick="zsCartOpen()">
