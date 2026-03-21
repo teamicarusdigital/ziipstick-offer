@@ -133,7 +133,8 @@ html{scroll-behavior:smooth;}
    SECTION 3 — PRESS LOGOS
 ============================================================ */
 .zs-press{background:#0c0e12;padding:0;height:74px;display:flex;align-items:center;overflow:hidden;position:relative;}
-.zs-press__track{display:flex;align-items:center;white-space:nowrap;}
+.zs-press__track{display:flex;align-items:center;white-space:nowrap;cursor:grab;}
+.zs-press__track--dragging{cursor:grabbing;}
 .zs-press__logo{height:22px;width:auto;opacity:0.85;filter:brightness(0) invert(1);margin-right:60px;flex-shrink:0;}
 @media(min-width:768px){
   .zs-press{height:94px;}
@@ -1870,6 +1871,76 @@ document.addEventListener('DOMContentLoaded', function() {
     s.textContent = '@keyframes zs-scroll{from{transform:translateX(0)}to{transform:translateX(-' + Math.round(oneSet) + 'px)}}';
     document.head.appendChild(s);
     track.style.animation = 'zs-scroll 20s linear infinite';
+
+    // --- Interaction: drag to scroll, hover to pause ---
+    var isDragging = false;
+    var dragStartX = 0;
+    var frozenX = 0;
+
+    function getTrackX() {
+      var t = window.getComputedStyle(track).transform;
+      if (!t || t === 'none') return 0;
+      var vals = t.match(/matrix.*\((.+)\)/)[1].split(', ');
+      return parseFloat(vals[4]) || 0;
+    }
+
+    function freezeAt(x) {
+      track.style.animation = 'none';
+      track.style.transform = 'translateX(' + x + 'px)';
+    }
+
+    function resumeFromX(x) {
+      var pos = x % oneSet;
+      if (pos > 0) pos -= oneSet;
+      var elapsed = (-pos / oneSet) * 20;
+      track.style.transform = '';
+      track.style.animation = 'zs-scroll 20s linear -' + elapsed.toFixed(3) + 's infinite';
+    }
+
+    // Hover pause/resume
+    track.addEventListener('mouseenter', function() {
+      if (!isDragging) { frozenX = getTrackX(); freezeAt(frozenX); }
+    });
+    track.addEventListener('mouseleave', function() {
+      if (!isDragging) resumeFromX(frozenX);
+    });
+
+    // Mouse drag
+    track.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      dragStartX = e.clientX;
+      frozenX = getTrackX();
+      freezeAt(frozenX);
+      track.classList.add('zs-press__track--dragging');
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      track.style.transform = 'translateX(' + (frozenX + e.clientX - dragStartX) + 'px)';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!isDragging) return;
+      isDragging = false;
+      track.classList.remove('zs-press__track--dragging');
+      resumeFromX(getTrackX());
+    });
+
+    // Touch drag
+    track.addEventListener('touchstart', function(e) {
+      isDragging = true;
+      dragStartX = e.touches[0].clientX;
+      frozenX = getTrackX();
+      freezeAt(frozenX);
+    }, {passive: true});
+    track.addEventListener('touchmove', function(e) {
+      if (!isDragging) return;
+      track.style.transform = 'translateX(' + (frozenX + e.touches[0].clientX - dragStartX) + 'px)';
+    }, {passive: true});
+    track.addEventListener('touchend', function() {
+      if (!isDragging) return;
+      isDragging = false;
+      resumeFromX(getTrackX());
+    });
   });
 
   // Sticky arrow direction — up if products section is above viewport, down if below
