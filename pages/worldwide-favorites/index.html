@@ -133,13 +133,12 @@ html{scroll-behavior:smooth;}
    SECTION 3 — PRESS LOGOS
 ============================================================ */
 .zs-press{background:#0c0e12;padding:0;height:74px;display:flex;align-items:center;overflow:hidden;position:relative;}
-.zs-press__track{display:flex;align-items:center;gap:60px;animation:zs-scroll 20s linear infinite;white-space:nowrap;}
-.zs-press__logo{height:22px;width:auto;opacity:0.85;filter:brightness(0) invert(1);}
+.zs-press__track{display:flex;align-items:center;animation:zs-scroll 20s linear infinite;white-space:nowrap;}
+.zs-press__logo{height:22px;width:auto;opacity:0.85;filter:brightness(0) invert(1);margin-right:60px;flex-shrink:0;}
 @keyframes zs-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 @media(min-width:768px){
   .zs-press{height:94px;}
-  .zs-press__logo{height:28px;}
-  .zs-press__track{gap:80px;}
+  .zs-press__logo{height:28px;margin-right:80px;}
 }
 
 /* ============================================================
