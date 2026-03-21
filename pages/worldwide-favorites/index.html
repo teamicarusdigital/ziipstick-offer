@@ -133,9 +133,8 @@ html{scroll-behavior:smooth;}
    SECTION 3 — PRESS LOGOS
 ============================================================ */
 .zs-press{background:#0c0e12;padding:0;height:74px;display:flex;align-items:center;overflow:hidden;position:relative;}
-.zs-press__track{display:flex;align-items:center;animation:zs-scroll 20s linear infinite;white-space:nowrap;}
+.zs-press__track{display:flex;align-items:center;white-space:nowrap;}
 .zs-press__logo{height:22px;width:auto;opacity:0.85;filter:brightness(0) invert(1);margin-right:60px;flex-shrink:0;}
-@keyframes zs-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 @media(min-width:768px){
   .zs-press{height:94px;}
   .zs-press__logo{height:28px;margin-right:80px;}
@@ -1849,8 +1848,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (v4) v4.style.display = 'block';
     if (v5) v5.style.display = 'block';
   }
-  // Press ticker — clone logos until track fills 3x viewport, then animate by exact one-set width
-  (function() {
+  // Press ticker — runs after window.load so images have real dimensions
+  window.addEventListener('load', function() {
     var track = document.getElementById('zs-press-track');
     if (!track) return;
     var origItems = Array.from(track.children);
@@ -1862,15 +1861,16 @@ document.addEventListener('DOMContentLoaded', function() {
         track.appendChild(c);
       });
     }
-    // Measure exact pixel width of one original set (logo widths + margins)
+    // Measure exact pixel width of one original set (images now have real widths)
     var oneSet = origItems.reduce(function(acc, el) {
       return acc + el.offsetWidth + parseFloat(window.getComputedStyle(el).marginRight);
     }, 0);
-    // Override animation keyframe with exact pixel distance instead of -50%
+    // Inject keyframe and start animation — no CSS animation was set before this point
     var s = document.createElement('style');
     s.textContent = '@keyframes zs-scroll{from{transform:translateX(0)}to{transform:translateX(-' + Math.round(oneSet) + 'px)}}';
     document.head.appendChild(s);
-  })();
+    track.style.animation = 'zs-scroll 20s linear infinite';
+  });
 
   // Sticky arrow direction — up if products section is above viewport, down if below
   function zsUpdateStickyArrow() {
